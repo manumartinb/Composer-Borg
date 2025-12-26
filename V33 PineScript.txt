@@ -1,0 +1,639 @@
+//@version=6
+indicator("PineScript Borg Collective V33 rev3", overlay=false)
+
+//=============================================================================
+// V33 rev3 - Leveraged Borg Collective
+// Estructura:
+//   - 33% Block 2 & KMLM Variants (QLD/PSQ algos)
+//   - 33% Hedged Equity Only V8 (QLD w VIXM)
+//   - 34% Emerging Markets Algos (EDC/EDZ)
+//=============================================================================
+
+//-------------------------------------------
+// 1) Definicion de tickers principales
+string ticker_SPY = "SPY"
+string ticker_QQQ = "QQQ"
+string ticker_TQQQ = "TQQQ"
+string ticker_QLD = "QLD"
+string ticker_SHV = "SHV"
+string ticker_PSQ = "PSQ"
+string ticker_VIXM = "VIXM"
+string ticker_GLD = "GLD"
+string ticker_TLT = "TLT"
+string ticker_AGG = "AGG"
+string ticker_BND = "BND"
+string ticker_VWO = "VWO"
+string ticker_EEM = "EEM"
+string ticker_IEF = "IEF"
+string ticker_SH = "SH"
+string ticker_FDN = "FDN"
+string ticker_XLU = "XLU"
+
+//-------------------------------------------
+// 2) Tickers adicionales para V33
+string ticker_KMLM = "KMLM"
+string ticker_XLK = "XLK"
+string ticker_SMH = "SMH"
+string ticker_HYD = "HYD"
+string ticker_IOO = "IOO"
+string ticker_VTV = "VTV"
+string ticker_XLP = "XLP"
+string ticker_XLF = "XLF"
+string ticker_SCHX = "SCHX"
+string ticker_MGC = "MGC"
+string ticker_VOX = "VOX"
+string ticker_EDC = "EDC"
+string ticker_EDZ = "EDZ"
+string ticker_IEI = "IEI"
+string ticker_IWM = "IWM"
+string ticker_IGIB = "IGIB"
+string ticker_SHY = "SHY"
+string ticker_USRT = "USRT"
+string ticker_DIA = "DIA"
+string ticker_ISCB = "ISCB"
+string ticker_DLN = "DLN"
+
+//-------------------------------------------
+// 3) Obtener datos (precios de cierre ajustados)
+float SPY_close = request.security(ticker.modify(ticker_SPY, session.regular, adjustment.dividends), timeframe.period, close)
+float QQQ_close = request.security(ticker.modify(ticker_QQQ, session.regular, adjustment.dividends), timeframe.period, close)
+float TQQQ_close = request.security(ticker.modify(ticker_TQQQ, session.regular, adjustment.dividends), timeframe.period, close)
+float QLD_close = request.security(ticker.modify(ticker_QLD, session.regular, adjustment.dividends), timeframe.period, close)
+float SHV_close = request.security(ticker.modify(ticker_SHV, session.regular, adjustment.dividends), timeframe.period, close)
+float PSQ_close = request.security(ticker.modify(ticker_PSQ, session.regular, adjustment.dividends), timeframe.period, close)
+float VIXM_close = request.security(ticker.modify(ticker_VIXM, session.regular, adjustment.dividends), timeframe.period, close)
+float GLD_close = request.security(ticker.modify(ticker_GLD, session.regular, adjustment.dividends), timeframe.period, close)
+float TLT_close = request.security(ticker.modify(ticker_TLT, session.regular, adjustment.dividends), timeframe.period, close)
+float AGG_close = request.security(ticker.modify(ticker_AGG, session.regular, adjustment.dividends), timeframe.period, close)
+float BND_close = request.security(ticker.modify(ticker_BND, session.regular, adjustment.dividends), timeframe.period, close)
+float VWO_close = request.security(ticker.modify(ticker_VWO, session.regular, adjustment.dividends), timeframe.period, close)
+float EEM_close = request.security(ticker.modify(ticker_EEM, session.regular, adjustment.dividends), timeframe.period, close)
+float IEF_close = request.security(ticker.modify(ticker_IEF, session.regular, adjustment.dividends), timeframe.period, close)
+float SH_close = request.security(ticker.modify(ticker_SH, session.regular, adjustment.dividends), timeframe.period, close)
+float FDN_close = request.security(ticker.modify(ticker_FDN, session.regular, adjustment.dividends), timeframe.period, close)
+float XLU_close = request.security(ticker.modify(ticker_XLU, session.regular, adjustment.dividends), timeframe.period, close)
+float KMLM_close = request.security(ticker.modify(ticker_KMLM, session.regular, adjustment.dividends), timeframe.period, close)
+float XLK_close = request.security(ticker.modify(ticker_XLK, session.regular, adjustment.dividends), timeframe.period, close)
+float SMH_close = request.security(ticker.modify(ticker_SMH, session.regular, adjustment.dividends), timeframe.period, close)
+float HYD_close = request.security(ticker.modify(ticker_HYD, session.regular, adjustment.dividends), timeframe.period, close)
+float IOO_close = request.security(ticker.modify(ticker_IOO, session.regular, adjustment.dividends), timeframe.period, close)
+float VTV_close = request.security(ticker.modify(ticker_VTV, session.regular, adjustment.dividends), timeframe.period, close)
+float XLP_close = request.security(ticker.modify(ticker_XLP, session.regular, adjustment.dividends), timeframe.period, close)
+float XLF_close = request.security(ticker.modify(ticker_XLF, session.regular, adjustment.dividends), timeframe.period, close)
+float SCHX_close = request.security(ticker.modify(ticker_SCHX, session.regular, adjustment.dividends), timeframe.period, close)
+float MGC_close = request.security(ticker.modify(ticker_MGC, session.regular, adjustment.dividends), timeframe.period, close)
+float VOX_close = request.security(ticker.modify(ticker_VOX, session.regular, adjustment.dividends), timeframe.period, close)
+float EDC_close = request.security(ticker.modify(ticker_EDC, session.regular, adjustment.dividends), timeframe.period, close)
+float EDZ_close = request.security(ticker.modify(ticker_EDZ, session.regular, adjustment.dividends), timeframe.period, close)
+float IEI_close = request.security(ticker.modify(ticker_IEI, session.regular, adjustment.dividends), timeframe.period, close)
+float IWM_close = request.security(ticker.modify(ticker_IWM, session.regular, adjustment.dividends), timeframe.period, close)
+float IGIB_close = request.security(ticker.modify(ticker_IGIB, session.regular, adjustment.dividends), timeframe.period, close)
+float SHY_close = request.security(ticker.modify(ticker_SHY, session.regular, adjustment.dividends), timeframe.period, close)
+float USRT_close = request.security(ticker.modify(ticker_USRT, session.regular, adjustment.dividends), timeframe.period, close)
+float DIA_close = request.security(ticker.modify(ticker_DIA, session.regular, adjustment.dividends), timeframe.period, close)
+float ISCB_close = request.security(ticker.modify(ticker_ISCB, session.regular, adjustment.dividends), timeframe.period, close)
+float DLN_close = request.security(ticker.modify(ticker_DLN, session.regular, adjustment.dividends), timeframe.period, close)
+
+//-------------------------------------------
+// 4) Calculo de indicadores (RSI, SMA, cambios porcentuales)
+
+// RSI basicos
+float SPY_rsi_10 = ta.rsi(SPY_close, 10)
+float QQQ_rsi_10 = ta.rsi(QQQ_close, 10)
+float TQQQ_rsi_10 = ta.rsi(TQQQ_close, 10)
+float IOO_rsi_10 = ta.rsi(IOO_close, 10)
+float VTV_rsi_10 = ta.rsi(VTV_close, 10)
+float XLP_rsi_10 = ta.rsi(XLP_close, 10)
+float XLF_rsi_10 = ta.rsi(XLF_close, 10)
+float SCHX_rsi_10 = ta.rsi(SCHX_close, 10)
+float MGC_rsi_10 = ta.rsi(MGC_close, 10)
+float VOX_rsi_10 = ta.rsi(VOX_close, 10)
+float VIXM_rsi_10 = ta.rsi(VIXM_close, 10)
+float HYD_rsi_10 = ta.rsi(HYD_close, 10)
+float KMLM_rsi_10 = ta.rsi(KMLM_close, 10)
+float XLK_rsi_10 = ta.rsi(XLK_close, 10)
+float SMH_rsi_10 = ta.rsi(SMH_close, 10)
+float AGG_rsi_20 = ta.rsi(AGG_close, 20)
+float SH_rsi_60 = ta.rsi(SH_close, 60)
+float IEF_rsi_10 = ta.rsi(IEF_close, 10)
+float PSQ_rsi_20 = ta.rsi(PSQ_close, 20)
+float TLT_rsi_20 = ta.rsi(TLT_close, 20)
+float FDN_rsi_200 = ta.rsi(FDN_close, 200)
+float XLU_rsi_200 = ta.rsi(XLU_close, 200)
+
+// RSI para Emerging Markets
+float EEM_rsi_10 = ta.rsi(EEM_close, 10)
+float EEM_rsi_14 = ta.rsi(EEM_close, 14)
+float EEM_rsi_15 = ta.rsi(EEM_close, 15)
+float EEM_rsi_16 = ta.rsi(EEM_close, 16)
+float IEI_rsi_10 = ta.rsi(IEI_close, 10)
+float IEI_rsi_11 = ta.rsi(IEI_close, 11)
+float IWM_rsi_10 = ta.rsi(IWM_close, 10)
+float IWM_rsi_15 = ta.rsi(IWM_close, 15)
+float IWM_rsi_16 = ta.rsi(IWM_close, 16)
+float IGIB_rsi_10 = ta.rsi(IGIB_close, 10)
+float IGIB_rsi_15 = ta.rsi(IGIB_close, 15)
+float SHY_rsi_10 = ta.rsi(SHY_close, 10)
+float USRT_rsi_10 = ta.rsi(USRT_close, 10)
+float DIA_rsi_10 = ta.rsi(DIA_close, 10)
+float ISCB_rsi_10 = ta.rsi(ISCB_close, 10)
+float DLN_rsi_10 = ta.rsi(DLN_close, 10)
+
+// SMAs
+float SPY_ma_30 = ta.sma(SPY_close, 30)
+float SPY_ma_200 = ta.sma(SPY_close, 200)
+float TQQQ_sma_20 = ta.sma(TQQQ_close, 20)
+float TLT_ma_10 = ta.sma(TLT_close, 10)
+float TLT_ma_50 = ta.sma(TLT_close, 50)
+float GLD_ma_20 = ta.sma(GLD_close, 20)
+float GLD_ma_250 = ta.sma(GLD_close, 250)
+float KMLM_ma_20 = ta.sma(KMLM_close, 20)
+float VWO_ma_63 = ta.sma(VWO_close, 63)
+float VWO_ma_126 = ta.sma(VWO_close, 126)
+float EEM_sma_200 = ta.sma(EEM_close, 200)
+float SHV_sma_50 = ta.sma(SHV_close, 50)
+
+// Retornos acumulados
+float QQQ_cumret_5 = QQQ_close[5] != 0 ? (QQQ_close / QQQ_close[5] - 1) * 100 : na
+float VWO_cumret_63 = VWO_close[63] != 0 ? (VWO_close / VWO_close[63] - 1) * 100 : na
+float VWO_cumret_126 = VWO_close[126] != 0 ? (VWO_close / VWO_close[126] - 1) * 100 : na
+float SHV_cumret_60 = SHV_close[60] != 0 ? (SHV_close / SHV_close[60] - 1) * 100 : na
+float SHV_cumret_63 = SHV_close[63] != 0 ? (SHV_close / SHV_close[63] - 1) * 100 : na
+float SHV_cumret_126 = SHV_close[126] != 0 ? (SHV_close / SHV_close[126] - 1) * 100 : na
+float BND_cumret_60 = BND_close[60] != 0 ? (BND_close / BND_close[60] - 1) * 100 : na
+
+//-------------------------------------------
+// 5) Inicializar asignaciones de activos
+float QLD = 0.0
+float SHV = 0.0
+float PSQ = 0.0
+float VIXM = 0.0
+float EDC = 0.0
+float EDZ = 0.0
+
+//=============================================================================
+// BLOCK 1: Block 2 & KMLM Variants (33%)
+// Dividido en: 50% Block 2 | 50% KMLM Variants
+//=============================================================================
+float BLOCK1_WEIGHT = 0.33
+
+//---------------------------------------------
+// BLOCK 1A: Block 2 (50% del Block 1 = 0.165)
+// Condicion inicial: SPY > MA(30)
+//---------------------------------------------
+float B1A_WEIGHT = BLOCK1_WEIGHT * 0.5
+
+if SPY_close > SPY_ma_30
+    // "200d FDN vs 200d XLU"
+    float algo_weight = B1A_WEIGHT / 6.0  // 6 sub-algoritmos con peso igual
+
+    // Algo 1: FDN vs XLU
+    if FDN_rsi_200 > XLU_rsi_200
+        QLD += algo_weight
+    else
+        // Secondary bullish check: SPY > MA200
+        if SPY_close > SPY_ma_200
+            // TLT momentum check
+            if TLT_ma_10 > TLT_ma_50
+                // weight-inverse-volatility entre SHV y QLD -> simplificado a 50/50
+                SHV += algo_weight * 0.5
+                QLD += algo_weight * 0.5
+            else
+                // Gold check
+                if GLD_ma_20 > GLD_ma_250
+                    // weight-inverse-volatility SHV, SHV, QLD -> ~67% SHV, 33% QLD
+                    SHV += algo_weight * 0.67
+                    QLD += algo_weight * 0.33
+                else
+                    SHV += algo_weight
+        else
+            // Risk OFF: SHV, SHV, PSQ -> 67% SHV, 33% PSQ
+            SHV += algo_weight * 0.67
+            PSQ += algo_weight * 0.33
+
+    // Algo 2: VWO momentum 126d
+    if VWO_cumret_126 > SHV_cumret_126
+        if VWO_close > VWO_ma_126
+            QLD += algo_weight
+        else
+            // Balanced: 50% SHV, 50% QLD
+            SHV += algo_weight * 0.5
+            QLD += algo_weight * 0.5
+    else
+        if SPY_close > SPY_ma_200
+            if TLT_ma_10 > TLT_ma_50
+                SHV += algo_weight * 0.5
+                QLD += algo_weight * 0.5
+            else
+                if GLD_ma_20 > GLD_ma_250
+                    SHV += algo_weight * 0.67
+                    QLD += algo_weight * 0.33
+                else
+                    SHV += algo_weight
+        else
+            SHV += algo_weight * 0.67
+            PSQ += algo_weight * 0.33
+
+    // Algo 3: VWO momentum 63d
+    if VWO_cumret_63 > SHV_cumret_63
+        if VWO_close > VWO_ma_63
+            QLD += algo_weight
+        else
+            SHV += algo_weight * 0.5
+            QLD += algo_weight * 0.5
+    else
+        if SPY_close > SPY_ma_200
+            if TLT_ma_10 > TLT_ma_50
+                SHV += algo_weight * 0.5
+                QLD += algo_weight * 0.5
+            else
+                if GLD_ma_20 > GLD_ma_250
+                    SHV += algo_weight * 0.67
+                    QLD += algo_weight * 0.33
+                else
+                    SHV += algo_weight
+        else
+            SHV += algo_weight * 0.67
+            PSQ += algo_weight * 0.33
+
+    // Algo 4: 60d BND vs 60d BIL(SHV)
+    if BND_cumret_60 > SHV_cumret_60
+        QLD += algo_weight
+    else
+        if SPY_close > SPY_ma_200
+            if TLT_ma_10 > TLT_ma_50
+                SHV += algo_weight * 0.5
+                QLD += algo_weight * 0.5
+            else
+                if GLD_ma_20 > GLD_ma_250
+                    SHV += algo_weight * 0.67
+                    QLD += algo_weight * 0.33
+                else
+                    SHV += algo_weight
+        else
+            SHV += algo_weight * 0.67
+            PSQ += algo_weight * 0.33
+
+    // Algo 5: 20/60 -> 10/20
+    if AGG_rsi_20 > SH_rsi_60
+        QLD += algo_weight
+    else
+        if IEF_rsi_10 > PSQ_rsi_20
+            QLD += algo_weight
+        else
+            if SPY_close > SPY_ma_200
+                if TLT_ma_10 > TLT_ma_50
+                    SHV += algo_weight * 0.5
+                    QLD += algo_weight * 0.5
+                else
+                    if GLD_ma_20 > GLD_ma_250
+                        SHV += algo_weight * 0.67
+                        QLD += algo_weight * 0.33
+                    else
+                        SHV += algo_weight
+            else
+                SHV += algo_weight * 0.67
+                PSQ += algo_weight * 0.33
+
+    // Algo 6: 20d TLT vs 20d PSQ
+    if TLT_rsi_20 > PSQ_rsi_20
+        QLD += algo_weight
+    else
+        if SPY_close > SPY_ma_200
+            if TLT_ma_10 > TLT_ma_50
+                SHV += algo_weight * 0.5
+                QLD += algo_weight * 0.5
+            else
+                if GLD_ma_20 > GLD_ma_250
+                    SHV += algo_weight * 0.67
+                    QLD += algo_weight * 0.33
+                else
+                    SHV += algo_weight
+        else
+            SHV += algo_weight * 0.67
+            PSQ += algo_weight * 0.33
+
+    // Algo 7: 20d AGG vs 60d SH (adicional)
+    if AGG_rsi_20 > SH_rsi_60
+        QLD += algo_weight
+    else
+        if SPY_close > SPY_ma_200
+            if TLT_ma_10 > TLT_ma_50
+                SHV += algo_weight * 0.5
+                QLD += algo_weight * 0.5
+            else
+                if GLD_ma_20 > GLD_ma_250
+                    SHV += algo_weight * 0.67
+                    QLD += algo_weight * 0.33
+                else
+                    SHV += algo_weight
+        else
+            SHV += algo_weight * 0.67
+            PSQ += algo_weight * 0.33
+
+else
+    // SPY <= MA(30) -> Risk OFF path
+    if SPY_close > SPY_ma_200
+        if TLT_ma_10 > TLT_ma_50
+            SHV += B1A_WEIGHT * 0.5
+            QLD += B1A_WEIGHT * 0.5
+        else
+            if GLD_ma_20 > GLD_ma_250
+                SHV += B1A_WEIGHT * 0.67
+                QLD += B1A_WEIGHT * 0.33
+            else
+                SHV += B1A_WEIGHT
+    else
+        // Risk OFF: SHV, SHV, PSQ
+        SHV += B1A_WEIGHT * 0.67
+        PSQ += B1A_WEIGHT * 0.33
+
+//---------------------------------------------
+// BLOCK 1B: KMLM Variants w dump catcher (50% del Block 1 = 0.165)
+//---------------------------------------------
+float B1B_WEIGHT = BLOCK1_WEIGHT * 0.5
+
+// Dump catcher: QQQ cumret 5d < -5.5%
+if QQQ_cumret_5 < -5.5
+    // Big down move -> SHV
+    SHV += B1B_WEIGHT
+else
+    float kmlm_algo_weight = B1B_WEIGHT / 4.0  // 4 sub-algoritmos KMLM
+
+    // KMLM Variant 1: SPY vs KMLM -> 20d
+    if SPY_rsi_10 > KMLM_rsi_10
+        QLD += kmlm_algo_weight
+    else
+        if KMLM_close < KMLM_ma_20
+            QLD += kmlm_algo_weight
+        else
+            if QQQ_rsi_10 < 32.5
+                SHV += kmlm_algo_weight
+            else
+                PSQ += kmlm_algo_weight
+
+    // KMLM Variant 2: XLK vs KMLM -> 20d
+    if XLK_rsi_10 > KMLM_rsi_10
+        QLD += kmlm_algo_weight
+    else
+        if KMLM_close < KMLM_ma_20
+            QLD += kmlm_algo_weight
+        else
+            if QQQ_rsi_10 < 32.5
+                SHV += kmlm_algo_weight
+            else
+                PSQ += kmlm_algo_weight
+
+    // KMLM Variant 3: SMH vs KMLM -> 20d
+    if SMH_rsi_10 > KMLM_rsi_10
+        QLD += kmlm_algo_weight
+    else
+        if KMLM_close < KMLM_ma_20
+            QLD += kmlm_algo_weight
+        else
+            if QQQ_rsi_10 < 32.5
+                SHV += kmlm_algo_weight
+            else
+                PSQ += kmlm_algo_weight
+
+    // KMLM Variant 4: HYD vs KMLM
+    if HYD_rsi_10 > KMLM_rsi_10
+        QLD += kmlm_algo_weight
+    else
+        if QQQ_rsi_10 < 32.5
+            SHV += kmlm_algo_weight
+        else
+            PSQ += kmlm_algo_weight
+
+//=============================================================================
+// BLOCK 2: Hedged Equity Only V8 (33%) - QLD w VIXM
+//=============================================================================
+float BLOCK2_WEIGHT = 0.33
+
+// Primero: Si VIXM RSI > 85, salir a SHV
+if VIXM_rsi_10 > 85
+    SHV += BLOCK2_WEIGHT
+else
+    // Chequeos de overbought para entrar en VIXM
+    bool overbought = false
+
+    if SPY_rsi_10 > 79
+        overbought := true
+    else if SCHX_rsi_10 > 79
+        overbought := true
+    else if MGC_rsi_10 > 79
+        overbought := true
+    else if IOO_rsi_10 > 79
+        overbought := true
+    else if XLP_rsi_10 > 76
+        overbought := true
+    else if VTV_rsi_10 > 78
+        overbought := true
+    else if VOX_rsi_10 > 78
+        overbought := true
+    else if XLF_rsi_10 > 80
+        overbought := true
+    else if TQQQ_rsi_10 > 83
+        overbought := true
+
+    if overbought
+        // Moderated VIXM
+        VIXM += BLOCK2_WEIGHT
+    else
+        // Normal Path: weight-inverse-volatility entre Just Run This y VIXM
+        // Simplificado a ~50% cada uno (ajustable segun volatilidad real)
+        float bull_weight = BLOCK2_WEIGHT * 0.5
+        float vixm_weight = BLOCK2_WEIGHT * 0.5
+
+        // Just Run This logic para la parte bull
+        if SPY_close > SPY_ma_200
+            QLD += bull_weight
+        else
+            if TQQQ_close > TQQQ_sma_20
+                QLD += bull_weight
+            else
+                if QQQ_rsi_10 < 32.5
+                    SHV += bull_weight
+                else
+                    if SPY_close > SPY_ma_200
+                        // 50% PSQ, 50% SHV
+                        PSQ += bull_weight * 0.5
+                        SHV += bull_weight * 0.5
+                    else
+                        PSQ += bull_weight
+
+        // VIXM allocation
+        VIXM += vixm_weight
+
+//=============================================================================
+// BLOCK 3: Emerging Markets Algos w EDC|EDZ (34%)
+//=============================================================================
+float BLOCK3_WEIGHT = 0.34
+
+// Dump catcher primero
+if QQQ_cumret_5 < -5.5
+    SHV += BLOCK3_WEIGHT
+else
+    // Dividir entre Foreign Markets (50%) y EEM Algo V1 (50%)
+    float EM_HALF = BLOCK3_WEIGHT * 0.5
+
+    //---------------------------------------------
+    // BLOCK 3A: Foreign Markets w EDZ (50%)
+    //---------------------------------------------
+    if EEM_close > EEM_sma_200
+        // Bull regime
+        float bull_algo_weight = EM_HALF / 3.0  // 3 sub-algoritmos
+
+        // Algo 1: SHY/USRT
+        if SHY_rsi_10 > USRT_rsi_10
+            EDC += bull_algo_weight
+        else
+            if EEM_rsi_10 < 25
+                SHV += bull_algo_weight
+            else
+                EDZ += bull_algo_weight
+
+        // Algo 2: IEF/DIA
+        if IEF_rsi_10 > DIA_rsi_10
+            EDC += bull_algo_weight
+        else
+            if EEM_rsi_10 < 25
+                SHV += bull_algo_weight
+            else
+                EDZ += bull_algo_weight
+
+        // Algo 3: IEI/IWM
+        if IEI_rsi_11 > IWM_rsi_16
+            EDC += bull_algo_weight
+        else
+            if EEM_rsi_10 < 25
+                SHV += bull_algo_weight
+            else
+                EDZ += bull_algo_weight
+    else
+        // Bear regime
+        if EEM_rsi_14 < 30
+            EDC += EM_HALF
+        else
+            float bear_algo_weight = EM_HALF / 3.0  // 3 sub-algoritmos
+
+            // Algo 1: ISCB/IWM
+            if ISCB_rsi_10 > IWM_rsi_10
+                EDC += bear_algo_weight
+            else
+                if EEM_rsi_10 < 25
+                    SHV += bear_algo_weight
+                else
+                    EDZ += bear_algo_weight
+
+            // Algo 2: IGIB/DLN
+            if IGIB_rsi_10 > DLN_rsi_10
+                EDC += bear_algo_weight
+            else
+                if EEM_rsi_10 < 25
+                    SHV += bear_algo_weight
+                else
+                    EDZ += bear_algo_weight
+
+            // Algo 3: IEI/EEM
+            if IEI_rsi_11 > EEM_rsi_16
+                EDC += bear_algo_weight
+            else
+                if EEM_rsi_10 < 25
+                    SHV += bear_algo_weight
+                else
+                    EDZ += bear_algo_weight
+
+    //---------------------------------------------
+    // BLOCK 3B: EEM Algo V1 (50%)
+    //---------------------------------------------
+    if SHV_close > SHV_sma_50
+        if EEM_close > EEM_sma_200
+            // IEI vs IWM
+            if IEI_rsi_10 > IWM_rsi_15
+                EDC += EM_HALF
+            else
+                if EEM_rsi_10 < 25
+                    SHV += EM_HALF
+                else
+                    EDZ += EM_HALF
+        else
+            // Split entre IGIB vs EEM y IGIB vs SPY
+            float half_eem = EM_HALF * 0.5
+
+            // IGIB vs EEM
+            if IGIB_rsi_15 > EEM_rsi_15
+                EDC += half_eem
+            else
+                if EEM_rsi_10 < 25
+                    SHV += half_eem
+                else
+                    EDZ += half_eem
+
+            // IGIB vs SPY
+            if IGIB_rsi_10 > SPY_rsi_10
+                EDC += half_eem
+            else
+                if EEM_rsi_10 < 25
+                    SHV += half_eem
+                else
+                    EDZ += half_eem
+    else
+        // SHV <= SMA(50): IGIB vs SPY
+        if IGIB_rsi_10 > SPY_rsi_10
+            EDC += EM_HALF
+        else
+            if EEM_rsi_10 < 25
+                SHV += EM_HALF
+            else
+                EDZ += EM_HALF
+
+//=============================================================================
+// 6) Normalizar asignaciones
+//=============================================================================
+float total = QLD + SHV + PSQ + VIXM + EDC + EDZ
+
+if total > 0
+    QLD := QLD / total
+    SHV := SHV / total
+    PSQ := PSQ / total
+    VIXM := VIXM / total
+    EDC := EDC / total
+    EDZ := EDZ / total
+
+//=============================================================================
+// 7) Graficar las asignaciones
+//=============================================================================
+plot(EDZ, title="EDZ Allocation", color=color.rgb(180, 50, 50), style=plot.style_columns)
+plot(EDC, title="EDC Allocation", color=color.rgb(50, 180, 50), style=plot.style_columns)
+plot(PSQ, title="PSQ Allocation", color=color.new(color.red, 0), style=plot.style_columns)
+plot(QLD, title="QLD Allocation", color=color.new(color.green, 0), style=plot.style_columns)
+plot(SHV, title="SHV Allocation", color=color.new(color.yellow, 0), style=plot.style_columns)
+plot(VIXM, title="VIXM Allocation", color=color.new(color.purple, 0), style=plot.style_columns)
+
+//=============================================================================
+// 8) Tabla informativa
+//=============================================================================
+var table infoTable = table.new(position.top_right, 2, 7, bgcolor=color.new(color.black, 80))
+
+if barstate.islast
+    table.cell(infoTable, 0, 0, "Asset", text_color=color.white, text_size=size.small)
+    table.cell(infoTable, 1, 0, "Allocation", text_color=color.white, text_size=size.small)
+
+    table.cell(infoTable, 0, 1, "QLD", text_color=color.green, text_size=size.small)
+    table.cell(infoTable, 1, 1, str.tostring(QLD * 100, "#.##") + "%", text_color=color.green, text_size=size.small)
+
+    table.cell(infoTable, 0, 2, "SHV", text_color=color.yellow, text_size=size.small)
+    table.cell(infoTable, 1, 2, str.tostring(SHV * 100, "#.##") + "%", text_color=color.yellow, text_size=size.small)
+
+    table.cell(infoTable, 0, 3, "PSQ", text_color=color.red, text_size=size.small)
+    table.cell(infoTable, 1, 3, str.tostring(PSQ * 100, "#.##") + "%", text_color=color.red, text_size=size.small)
+
+    table.cell(infoTable, 0, 4, "VIXM", text_color=color.purple, text_size=size.small)
+    table.cell(infoTable, 1, 4, str.tostring(VIXM * 100, "#.##") + "%", text_color=color.purple, text_size=size.small)
+
+    table.cell(infoTable, 0, 5, "EDC", text_color=color.lime, text_size=size.small)
+    table.cell(infoTable, 1, 5, str.tostring(EDC * 100, "#.##") + "%", text_color=color.lime, text_size=size.small)
+
+    table.cell(infoTable, 0, 6, "EDZ", text_color=color.maroon, text_size=size.small)
+    table.cell(infoTable, 1, 6, str.tostring(EDZ * 100, "#.##") + "%", text_color=color.maroon, text_size=size.small)
