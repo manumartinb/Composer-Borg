@@ -1,0 +1,1020 @@
+//@version=6
+indicator("PineScript V3 Borg Collective V30", overlay=false)
+
+//-------------------------------------------
+// 1) Definición de tickers relevantes principales
+string ticker_SPY = "SPY"
+string ticker_QQQ = "QQQ"
+string ticker_VIXM = "VIXM"
+string ticker_VIXY = "VIXY"
+string ticker_SHV = "SHV"
+string ticker_PSQ = "PSQ"
+string ticker_TQQQ = "TQQQ"
+string ticker_AGG = "AGG"
+string ticker_VWO = "VWO"
+string ticker_IOO = "IOO"
+string ticker_VTV = "VTV"
+string ticker_XLF = "XLF"
+string ticker_XLP = "XLP"
+string ticker_IEF = "IEF"
+string ticker_SH = "SH"
+
+//-------------------------------------------
+// 2) Tickers adicionales
+string ticker_FDN = "FDN"
+string ticker_XLU = "XLU"
+string ticker_TLT = "TLT"
+string ticker_GLD = "GLD"
+string ticker_KMLM = "KMLM"
+string ticker_XLK = "XLK"
+string ticker_SMH = "SMH"
+string ticker_HYD = "HYD"
+string ticker_BND = "BND"  
+string ticker_EEM = "EEM"
+string ticker_IEI = "IEI"
+string ticker_IGIB = "IGIB"
+string ticker_IWM = "IWM"
+
+
+//-------------------------------------------
+// 3) Obtener datos (precios de cierre ajustados)
+float SPY_close = request.security(ticker.modify(ticker_SPY, session.regular, adjustment.dividends), timeframe.period, close)
+float QQQ_close = request.security(ticker.modify(ticker_QQQ, session.regular, adjustment.dividends), timeframe.period, close)
+float VIXM_close = request.security(ticker.modify(ticker_VIXM, session.regular, adjustment.dividends), timeframe.period, close)
+float VIXY_close = request.security(ticker.modify(ticker_VIXY, session.regular, adjustment.dividends), timeframe.period, close)
+float SHV_close = request.security(ticker.modify(ticker_SHV, session.regular, adjustment.dividends), timeframe.period, close)
+float PSQ_close = request.security(ticker.modify(ticker_PSQ, session.regular, adjustment.dividends), timeframe.period, close)
+float TQQQ_close = request.security(ticker.modify(ticker_TQQQ, session.regular, adjustment.dividends), timeframe.period, close)
+float AGG_close = request.security(ticker.modify(ticker_AGG, session.regular, adjustment.dividends), timeframe.period, close)
+float VWO_close = request.security(ticker.modify(ticker_VWO, session.regular, adjustment.dividends), timeframe.period, close)
+float IOO_close = request.security(ticker.modify(ticker_IOO, session.regular, adjustment.dividends), timeframe.period, close)
+float VTV_close = request.security(ticker.modify(ticker_VTV, session.regular, adjustment.dividends), timeframe.period, close)
+float XLF_close = request.security(ticker.modify(ticker_XLF, session.regular, adjustment.dividends), timeframe.period, close)
+float XLP_close = request.security(ticker.modify(ticker_XLP, session.regular, adjustment.dividends), timeframe.period, close)
+float IEF_close = request.security(ticker.modify(ticker_IEF, session.regular, adjustment.dividends), timeframe.period, close)
+float SH_close = request.security(ticker.modify(ticker_SH, session.regular, adjustment.dividends), timeframe.period, close)
+float KMLM_close = request.security(ticker.modify(ticker_KMLM, session.regular, adjustment.dividends), timeframe.period, close)
+float XLU_close = request.security(ticker.modify(ticker_XLU, session.regular, adjustment.dividends), timeframe.period, close)
+float XLK_close = request.security(ticker.modify(ticker_XLK, session.regular, adjustment.dividends), timeframe.period, close)
+float SMH_close = request.security(ticker.modify(ticker_SMH, session.regular, adjustment.dividends), timeframe.period, close)
+float TLT_close = request.security(ticker.modify(ticker_TLT, session.regular, adjustment.dividends), timeframe.period, close)
+float HYD_close = request.security(ticker.modify(ticker_HYD, session.regular, adjustment.dividends), timeframe.period, close)
+float FDN_close = request.security(ticker.modify(ticker_FDN, session.regular, adjustment.dividends), timeframe.period, close)
+float GLD_close = request.security(ticker.modify(ticker_GLD, session.regular, adjustment.dividends), timeframe.period, close)
+float BND_close = request.security(ticker.modify(ticker_BND, session.regular, adjustment.dividends), timeframe.period, close)
+float EEM_close = request.security(ticker.modify(ticker_EEM, session.regular, adjustment.dividends), timeframe.period, close)
+float IEI_close= request.security(ticker.modify(ticker_IEI, session.regular, adjustment.dividends), timeframe.period, close)
+float IGIB_close = request.security(ticker.modify(ticker_IGIB, session.regular, adjustment.dividends), timeframe.period, close)
+float IWM_close = request.security(ticker.modify(ticker_IWM, session.regular, adjustment.dividends), timeframe.period, close)
+
+
+
+//-------------------------------------------
+// 4) Cálculo de indicadores (RSI, SMA, cambios porcentuales)
+
+// RSI básicos
+float SPY_rsi_10 = ta.rsi(SPY_close, 10)
+float IOO_rsi_10 = ta.rsi(IOO_close, 10)
+float QQQ_rsi_10 = ta.rsi(QQQ_close, 10)
+float VTV_rsi_10 = ta.rsi(VTV_close, 10)
+float XLF_rsi_10 = ta.rsi(XLF_close, 10)
+float XLP_rsi_10 = ta.rsi(XLP_close, 10)
+float VIXM_rsi_20 = ta.rsi(VIXM_close, 20)
+float HYD_rsi_10 = ta.rsi(HYD_close, 10)
+float VIXY_rsi_10 = ta.rsi(VIXY_close, 10)
+float VIXM_rsi_10 = ta.rsi(VIXM_close, 10)
+
+// SMA y otros cálculos
+float SPY_ma_200 = ta.sma(SPY_close, 200)
+float TLT_ma_10 = ta.sma(TLT_close, 10)
+float TLT_ma_50 = ta.sma(TLT_close, 50)
+float GLD_ma_20 = ta.sma(GLD_close, 20)
+float GLD_ma_250 = ta.sma(GLD_close, 250)
+
+float VWO_cumret_63 = (VWO_close / request.security(ticker.modify(ticker_VWO, session.regular, adjustment.dividends), timeframe.period, close[63]) - 1) * 100
+float SHV_cumret_63 = (SHV_close / request.security(ticker.modify(ticker_SHV, session.regular, adjustment.dividends), timeframe.period, close[63]) - 1) * 100
+float VWO_cumret_126 = (VWO_close / request.security(ticker.modify(ticker_VWO, session.regular, adjustment.dividends), timeframe.period, close[126]) - 1) * 100
+float SHV_cumret_126 = (SHV_close / request.security(ticker.modify(ticker_SHV, session.regular, adjustment.dividends), timeframe.period, close[126]) - 1) * 100
+
+float VWO_ma_63 = ta.sma(VWO_close, 63)
+float VWO_ma_126 = ta.sma(VWO_close, 126)
+float FDN_rsi_200 = ta.rsi(FDN_close, 200)
+float XLU_rsi_200 = ta.rsi(XLU_close, 200)
+
+float BND_cumret_60 = (BND_close / request.security(ticker.modify(ticker_BND, session.regular, adjustment.dividends), timeframe.period, close[60]) - 1) * 100
+
+float IEF_rsi_10 = ta.rsi(IEF_close, 10)   
+float TLT_rsi_20 = ta.rsi(TLT_close, 20)   
+float SPY_ma_100 = ta.sma(SPY_close, 100)
+float QQQ_ma_25 = ta.sma(QQQ_close, 25)
+
+float QQQ_cumret_60 = QQQ_close[60] != 0 ? (QQQ_close / QQQ_close[60] - 1)*100 : na
+float TQQQ_sma_20 = ta.sma(TQQQ_close, 20)
+float QQQ_cumret_20 = QQQ_close[20] != 0 ? (QQQ_close / QQQ_close[20] - 1)*100 : na
+float AGG_cumret_60 = AGG_close[60] != 0 ? (AGG_close / AGG_close[60] - 1)*100 : na
+float SHV_cumret_60 = SHV_close[60] != 0 ? (SHV_close / SHV_close[60] - 1)*100 : na
+float VWO_cumret_60 = VWO_close[60] != 0 ? (VWO_close / VWO_close[60] - 1)*100 : na
+
+// Retornos diarios QQQ y su MA
+float QQQ_dailyRet = QQQ_close[1] != 0 ? (QQQ_close/QQQ_close[1]-1)*100 : na
+float QQQ_maRet_10 = ta.sma(QQQ_dailyRet, 10)
+
+// Más RSI
+float IEF_rsi_7 = ta.rsi(IEF_close,7)
+float PSQ_rsi_20 = ta.rsi(PSQ_close,20)
+float AGG_rsi_20 = ta.rsi(AGG_close,20)
+float SH_rsi_60 = ta.rsi(SH_close,60)
+
+// RSI adicionales y otros
+float QQQ_cumret_10 = QQQ_close[10] !=0 ? (QQQ_close/QQQ_close[10]-1)*100:na
+float AGG_rsi_21 = ta.rsi(AGG_close,21)
+float SPY_rsi_21 = ta.rsi(SPY_close,21)
+float TLT_rsi_21 = ta.rsi(TLT_close,21)
+float TLT_rsi_126 = ta.rsi(TLT_close,126)
+float XLU_rsi_126 = ta.rsi(XLU_close,126)
+float XLK_rsi_126 = ta.rsi(XLK_close,126)
+float AGG_rsi_10 = ta.rsi(AGG_close,10)
+float QQQ_ma_20 = ta.sma(QQQ_close,20)
+float PSQ_rsi_21 = ta.rsi(PSQ_close,21)
+float XLK_rsi_10 = ta.rsi(XLK_close,10)
+float SMH_rsi_10 = ta.rsi(SMH_close,10)
+float KMLM_rsi_10 = ta.rsi(KMLM_close,10)
+float KMLM_ma_20 = ta.sma(KMLM_close,20)
+
+//EEM Algo
+// Declaración previa de variables RSI y medias móviles necesarias
+float SHV_sma_50 = ta.sma(SHV_close, 50)
+float EEM_sma_200 = ta.sma(EEM_close, 200)
+float IEI_rsi_10 = ta.rsi(IEI_close, 10)
+float IWM_rsi_15 = ta.rsi(IWM_close, 15)
+float IGIB_rsi_15 = ta.rsi(IGIB_close, 15)
+float EEM_rsi_15 = ta.rsi(EEM_close, 15)
+float IGIB_rsi_10 = ta.rsi(IGIB_close, 10)
+
+//-------------------------------------------
+// 5) Inicializar asignaciones
+float QQQ = 0.0
+float SHV = 0.0
+float VIXM = 0.0
+float PSQ = 0.0
+float GLD = 0.0
+float EEM = 0.0
+
+// Si hay múltiples condiciones que en el original sobrescribían, ahora sumarán.
+
+// 0.7857 Block
+if SPY_rsi_10 > 80
+    SHV += 0.7857 *  1.0
+    if VIXM_rsi_20 < 50
+        VIXM += 0.7857 *  1.0
+    else
+        SHV += 0.7857 *  1.0
+else
+    if IOO_rsi_10 > 79
+        SHV += 0.7857 *  1.0
+        if VIXM_rsi_20 < 50
+            VIXM += 0.7857 *  1.0
+        else
+            SHV += 0.7857 *  1.0
+    else
+        if QQQ_rsi_10 > 79
+            SHV += 0.7857 *  1.0
+            if VIXM_rsi_20 < 50
+                VIXM += 0.7857 *  1.0
+            else
+                SHV += 0.7857 *  1.0
+        else
+            if VTV_rsi_10 > 78
+                PSQ += 0.7857 *  1.0
+                if VIXM_rsi_20 < 50
+                    VIXM += 0.7857 *  1.0
+                else
+                    SHV += 0.7857 *  1.0
+            else
+                if XLF_rsi_10 > 80
+                    SHV += 0.7857 *  1.0
+                    if VIXM_rsi_20 < 50
+                        VIXM += 0.7857 *  1.0
+                    else
+                        SHV += 0.7857 *  1.0
+                else
+                    if XLP_rsi_10 > 76
+                        PSQ += 0.7857 *  1.0
+                        if VIXM_rsi_20 < 50
+                            VIXM += 0.7857 *  1.0
+                        else
+                            SHV += 0.7857 *  1.0
+                    else
+                        // Aquí ya tenemos la sección main tactical algo
+                        // En script1 la lógica era sumando fracciones, no sobreescribiendo.
+                        // Just Run This - simplified 11/11/24
+                        
+                        if SPY_close > SPY_ma_200
+                            QQQ += 0.7857 *  0.0909 * 0.8182
+                        else
+                            if QQQ_cumret_60 < -12
+                                SHV += 0.7857 *  0.5 * 0.0909 * 0.8182
+                                QQQ += 0.7857 *  0.5 * 0.0909 * 0.8182
+                            else
+                                if TQQQ_close > TQQQ_sma_20
+                                    QQQ += 0.7857 *  0.0909 * 0.8182
+                                else
+                                    if QQQ_rsi_10 < 32.5
+                                        SHV += 0.7857 *  0.0909 * 0.8182
+                                    else
+                                        PSQ += 0.7857 *  0.0909 * 0.8182
+
+                        // 1999 FTLT w 100d MA macro filter
+                        if SPY_close > SPY_ma_100
+                            if QQQ_close > QQQ_ma_25
+                                QQQ += 0.7857 *  0.0909 * 0.8182
+                            else
+                                if QQQ_cumret_20 > QQQ_maRet_10
+                                    QQQ += 0.7857 *  0.0909 * 0.8182
+                                else
+                                    if AGG_cumret_60 > SHV_cumret_60
+                                        QQQ += 0.7857 *  0.0909 * 0.8182
+                                    else
+                                        if VWO_cumret_60 > SHV_cumret_60
+                                            QQQ += 0.7857 *  0.0909 * 0.8182
+                                        else
+                                            if IEF_rsi_7 > PSQ_rsi_20
+                                            //    if QQQ_rsi_10 < 32.5
+                                                SHV += 0.7857 *  0.0909 * 0.8182
+                                            //    else
+                                            //        PSQ += 0.7857 *  0.0909 * 0.8182
+                                            else
+                                                if QQQ_rsi_10 < 32.5
+                                                    SHV += 0.7857 *  0.0909 * 0.8182
+                                                else
+                                                    PSQ += 0.7857 *  0.0909 * 0.8182
+                        else
+                            if QQQ_close > QQQ_ma_25
+                                if QQQ_cumret_10 > 5
+                                    if QQQ_rsi_10 < 32.5
+                                        SHV += 0.7857 *  0.0909 * 0.8182
+                                    else
+                                        PSQ += 0.7857 *  0.0909 * 0.8182
+                                else
+                                    QQQ += 0.7857 *  0.0909 * 0.8182
+                            else
+                                SHV += 0.7857 *  0.0909 * 0.8182
+
+                        // "LBT FTLT/Bull/Bonds with XLU/XLK RSI filter"
+                        if XLU_rsi_126 < XLK_rsi_126
+                            if AGG_rsi_20 > SH_rsi_60
+                                QQQ += 0.7857 *  0.0909 * 0.8182
+                            else
+                                if AGG_rsi_21 > SPY_rsi_21
+                                    QQQ += 0.7857 *  0.0909 * 0.8182
+                                else
+                                    if QQQ_rsi_10 < 32.5
+                                        SHV += 0.7857 *  0.0909 * 0.8182
+                                    else
+                                        PSQ += 0.7857 *  0.0909 * 0.8182
+                        else
+                            if TLT_rsi_126 < 50
+                                if AGG_rsi_20 > SH_rsi_60
+                                    QQQ += 0.7857 *  0.0909 * 0.8182
+                                else
+                                    if QQQ_rsi_10 < 32.5
+                                        SHV += 0.7857 *  0.0909 * 0.8182
+                                    else
+                                        PSQ += 0.7857 *  0.0909 * 0.8182
+                            else
+                                if QQQ_rsi_10 < 32.5
+                                    SHV += 0.7857 *  0.0909 * 0.8182
+                                else
+                                    PSQ += 0.7857 *  0.0909 * 0.8182
+
+                        // "20/60 Machine - with 200d MA macro filter"
+                        if SPY_close > SPY_ma_200
+                            if AGG_rsi_20 > SH_rsi_60
+                                QQQ += 0.7857 *  0.0909 * 0.8182
+                            else
+                                if QQQ_rsi_10 < 32.5
+                                    SHV += 0.7857 *  0.0909 * 0.8182
+                                else
+                                    PSQ += 0.7857 *  0.0909 * 0.8182
+                        else
+                            if QQQ_cumret_60 < -11
+                                if AGG_rsi_10 > QQQ_rsi_10
+                                    QQQ += 0.7857 *  0.0909 * 0.8182
+                                else
+                                    if QQQ_rsi_10 < 32.5
+                                        SHV += 0.7857 *  0.0909 * 0.8182
+                                    else
+                                        PSQ += 0.7857 *  0.0909 * 0.8182
+                            else
+                                if QQQ_close > QQQ_ma_20
+                                    if TLT_rsi_21 > PSQ_rsi_21
+                                        QQQ += 0.7857 *  0.0909 * 0.8182
+                                    else
+                                        if QQQ_rsi_10 < 32.5
+                                            SHV += 0.7857 *  0.0909 * 0.8182
+                                        else
+                                            PSQ += 0.7857 *  0.0909 * 0.8182
+                                else
+                                    if QQQ_rsi_10 < 32.5
+                                        SHV += 0.7857 *  0.0909 * 0.8182
+                                    else
+                                        PSQ += 0.7857 *  0.0909 * 0.8182 
+                                            
+                        //---------------------------------------------
+                        //"KMLM Variants"
+                             // SPY vs KMLM -> 20d
+
+                        if SPY_rsi_10 > KMLM_rsi_10
+                            QQQ += 0.7857 *  0.0909 * 0.8182*0.25
+                        else
+                            if KMLM_close < KMLM_ma_20
+                                QQQ += 0.7857 *  0.0909 * 0.8182*0.25
+                            else
+                                if QQQ_rsi_10 < 32.5
+                                    SHV += 0.7857 *  0.0909 * 0.8182*0.25
+                                else
+                                    PSQ += 0.7857 *  0.0909 * 0.8182*0.25
+
+                                // XLK vs KMLM -> 20d
+                        if XLK_rsi_10 > KMLM_rsi_10
+                            QQQ += 0.7857 *  0.0909 * 0.8182*0.25
+                        else
+                            if KMLM_close < KMLM_ma_20
+                                QQQ += 0.7857 *  0.0909 * 0.8182*0.25
+                            else
+                                if QQQ_rsi_10 < 32.5
+                                    SHV += 0.7857 *  0.0909 * 0.8182*0.25
+                                else
+                                    PSQ += 0.7857 *  0.0909 * 0.8182*0.25
+
+                              // SMH vs KMLM -> 20d
+                        if SMH_rsi_10 > KMLM_rsi_10
+                            QQQ += 0.7857 *  0.0909 * 0.8182*0.25
+                        else
+                            if KMLM_close < KMLM_ma_20
+                                QQQ += 0.7857 *  0.0909 * 0.8182*0.25
+                            else
+                                if QQQ_rsi_10 < 32.5
+                                    SHV += 0.7857 *  0.0909 * 0.8182*0.25
+                                else
+                                    PSQ += 0.7857 *  0.0909 * 0.8182*0.25
+
+                             // HYD vs KMLM
+                        if HYD_rsi_10 > KMLM_rsi_10
+                            QQQ += 0.7857 *  0.0909 * 0.8182*0.25
+                        else
+                            if QQQ_rsi_10 < 32.5
+                                SHV += 0.7857 *  0.0909 * 0.8182*0.25
+                            else
+                                PSQ += 0.7857 *  0.0909 * 0.8182*0.25
+
+                        //---------------------------------------------
+                        // "200d FDN vs 200d XLU | 2007-07-05"
+                        if FDN_rsi_200 > XLU_rsi_200
+                            // QQQ asignado directamente
+                            QQQ += 0.7857 *  0.0909 * 0.8182
+                        else
+                            // Verificamos momentum SPY 200d
+                            if SPY_close > SPY_ma_200
+                                // "Ok, still some momentum..."
+                                if TLT_ma_10 > TLT_ma_50
+                                    SHV += 0.7857 *  0.0909 * 0.8182
+                                else
+                                    // "TLT isn't performing, how about Gold?"
+                                    if GLD_ma_20 > GLD_ma_250
+                                        GLD += 0.7857 *  0.0909 * 0.8182
+                                    else
+                                        SHV += 0.7857 *  0.0909 * 0.8182
+                            else
+                                // "Risk OFF..."
+                                if QQQ_rsi_10 < 32.5
+                                    // "ease up on the shorting as we're oversold"
+                                    SHV += 0.7857 *  0.0909 * 0.8182
+                                else
+                                    // Originalmente: filtra y selecciona top 2 de [PSQ, PSQ, TLT, TLT, GLD, SHV]
+                                    PSQ += 0.7857 *  0.333 * 0.0909 * 0.8182
+                                    GLD += 0.7857 *  0.333 * 0.0909 * 0.8182
+                                    SHV += 0.7857 *  0.333 * 0.0909 * 0.8182
+
+                        // 2) "VWO momentum"
+                        //
+                            // Primero: "126d momentum vs VWO"
+
+                        if VWO_cumret_126 > SHV_cumret_126
+                            // bullish con VWO a 126d
+                            if VWO_close > VWO_ma_126
+                                // bullish
+                                QQQ += 0.7857 *  0.0909 * 0.8182 * 0.5
+                            else
+                                // balanced: QQQ + SHV
+                                QQQ += 0.7857 *  0.5 * 0.0909 * 0.8182 * 0.5
+                                SHV += 0.7857 *  0.5 * 0.0909 * 0.8182 * 0.5
+                        else
+                            // "We'll check SPY momentum..."
+                            if SPY_close > SPY_ma_200
+                                // Ok, momentum SPY
+                                if TLT_ma_10 > TLT_ma_50
+                                    SHV += 0.7857 *  0.0909 * 0.8182 * 0.5
+                                else
+                                    // TLT isn't performing -> Gold?
+                                    if GLD_ma_20 > GLD_ma_250
+                                        GLD += 0.7857 *  0.0909 * 0.8182 * 0.5
+                                    else
+                                        SHV += 0.7857 *  0.0909 * 0.8182 * 0.5
+                            else
+                                // Risk OFF
+                                if QQQ_rsi_10 < 32.5
+                                    SHV += 0.7857 *  0.0909 * 0.8182 * 0.5
+                                else
+                                    // switch top 2 from [PSQ, PSQ, TLT, TLT, GLD, SHV]
+                              
+                                    PSQ += 0.7857 *  0.333 * 0.0909 * 0.8182 * 0.5
+                                    GLD += 0.7857 *  0.333 * 0.0909 * 0.8182 * 0.5
+                                    SHV += 0.7857 *  0.333 * 0.0909 * 0.8182 * 0.5
+
+                            // Ahora "63d momentum vs VWO"
+                        
+                        if VWO_cumret_63 > SHV_cumret_63
+                            // bullish 63d
+                            if VWO_close > VWO_ma_63
+                                // bullish
+                                QQQ += 0.7857 *  0.0909 * 0.8182 * 0.5
+                            else
+                                // balanced (QQQ + SHV)
+                                QQQ += 0.7857 *  0.5 * 0.0909 * 0.8182 * 0.5
+                                SHV += 0.7857 *  0.5 * 0.0909 * 0.8182 * 0.5
+                        else
+                            // check SPY momentum
+                            if SPY_close > SPY_ma_200
+                                if TLT_ma_10 > TLT_ma_50
+                                    SHV += 0.7857 *  0.0909 * 0.8182 * 0.5
+                                else
+                                    if GLD_ma_20 > GLD_ma_250
+                                        GLD += 0.7857 *  0.0909 * 0.8182 * 0.5
+                                    else
+                                        SHV += 0.7857 *  0.0909 * 0.8182 * 0.5
+                            else
+                                if QQQ_rsi_10 < 32.5
+                                    SHV += 0.7857 *  0.0909 * 0.8182 * 0.5
+                                else
+                                    // switch top 2 from [PSQ, PSQ, TLT, TLT, GLD, SHV]
+                              
+                                    PSQ += 0.7857 *  0.333 * 0.0909 * 0.8182 * 0.5
+                                    GLD += 0.7857 *  0.333 * 0.0909 * 0.8182 * 0.5
+                                    SHV += 0.7857 *  0.333 * 0.0909 * 0.8182 * 0.5 
+                        //---------------------------------------------
+                        // "60d BND vs 60d BIL"
+
+                        if BND_cumret_60 > SHV_cumret_60
+                            // bullish but balanced => QQQ
+                            QQQ += 0.7857 *  0.0909 * 0.8182
+                        else
+                            // check SPY momentum
+                            if SPY_close > SPY_ma_200
+                                if TLT_ma_10 > TLT_ma_50
+                                    SHV += 0.7857 *  0.0909 * 0.8182
+                                else
+                                    if GLD_ma_20 > GLD_ma_250
+                                        GLD += 0.7857 *  0.0909 * 0.8182
+                                    else
+                                        SHV += 0.7857 *  0.0909 * 0.8182
+                            else
+                                if QQQ_rsi_10 < 32.5
+                                    SHV += 0.7857 *  0.0909 * 0.8182
+                                else
+                                    // Originalmente: filtra y selecciona top 2 de [PSQ, PSQ, TLT, TLT, GLD, SHV]
+                                    PSQ += 0.7857 *  0.333 * 0.0909 * 0.8182
+                                    GLD += 0.7857 *  0.333 * 0.0909 * 0.8182
+                                    SHV += 0.7857 *  0.333 * 0.0909 * 0.8182
+
+                        //---------------------------------------------
+                        // 4) "20/60 -> 10/20"
+
+
+                        if AGG_rsi_20 > SH_rsi_60
+                            // bullish but balanced => QQQ
+                            QQQ += 0.7857 *  0.0909 * 0.8182
+                        else
+                            if IEF_rsi_10 > PSQ_rsi_20
+                                // bullish but balanced => QQQ
+                                QQQ += 0.7857 *  0.0909 * 0.8182
+                            else
+                                // check SPY momentum
+                                if SPY_close > SPY_ma_200
+                                    if TLT_ma_10 > TLT_ma_50
+                                        SHV += 0.7857 *  0.0909 * 0.8182
+                                    else
+                                        if GLD_ma_20 > GLD_ma_250
+                                            GLD += 0.7857 *  0.0909 * 0.8182
+                                        else
+                                            SHV += 0.7857 *  0.0909 * 0.8182
+                                else
+                                    if QQQ_rsi_10 < 32.5
+                                        SHV += 0.7857 *  0.0909 * 0.8182
+                                    else
+                                    // Originalmente: filtra y selecciona top 2 de [PSQ, PSQ, TLT, TLT, GLD, SHV]
+                                        PSQ += 0.7857 *  0.333 * 0.0909 * 0.8182
+                                        GLD += 0.7857 *  0.333 * 0.0909 * 0.8182
+                                        SHV += 0.7857 *  0.333 * 0.0909 * 0.8182 
+                        // "20d AGG vs 60d SH"
+                        if AGG_rsi_20 > SH_rsi_60
+                            // bullish but balanced => QQQ
+                            QQQ += 0.7857 *  0.0909 * 0.8182
+                        else
+                            // check SPY momentum
+                            if SPY_close > SPY_ma_200
+                                // Momentum SPY presente
+                                if TLT_ma_10 > TLT_ma_50
+                                    SHV += 0.7857 *  0.0909 * 0.8182
+                                else
+                                    // TLT no rinde, probar Gold
+                                    if GLD_ma_20 > GLD_ma_250
+                                        GLD += 0.7857 *  0.0909 * 0.8182
+                                    else
+                                        SHV += 0.7857 *  0.0909 * 0.8182
+                            else
+                                // Risk OFF
+                                if QQQ_rsi_10 < 32.5
+                                    // ease up on shorting: SHV
+                                    SHV += 0.7857 *  0.0909 * 0.8182
+                                else
+                                    // Originalmente: filtra y selecciona top 2 de [PSQ, PSQ, TLT, TLT, GLD, SHV]
+                                    PSQ += 0.7857 *  0.333 * 0.0909 * 0.8182
+                                    GLD += 0.7857 *  0.333 * 0.0909 * 0.8182
+                                    SHV += 0.7857 *  0.333 * 0.0909 * 0.8182
+
+                        //---------------------------------------------
+                        // "20d TLT vs 20d PSQ"
+
+
+                        if TLT_rsi_20 > PSQ_rsi_20
+                            // bullish but balanced => QQQ
+                            QQQ += 0.7857 *  0.0909 * 0.8182
+                        else
+                            // check SPY momentum again
+                            if SPY_close > SPY_ma_200
+                                if TLT_ma_10 > TLT_ma_50
+                                    SHV += 0.7857 *  0.0909 * 0.8182
+                                else
+                                    // TLT no rinde, probar Gold
+                                    if GLD_ma_20 > GLD_ma_250
+                                        GLD += 0.7857 *  0.0909 * 0.8182
+                                    else
+                                        SHV += 0.7857 *  0.0909 * 0.8182
+                            else
+                                // Risk OFF
+                                if QQQ_rsi_10 < 32.5
+                                    SHV += 0.7857 *  0.0909 * 0.8182
+                                else
+                                    // Originalmente: filtra y selecciona top 2 de [PSQ, PSQ, TLT, TLT, GLD, SHV]
+                                    PSQ += 0.7857 *  0.333 * 0.0909 * 0.8182
+                                    GLD += 0.7857 *  0.333 * 0.0909 * 0.8182
+                                    SHV += 0.7857 *  0.333 * 0.0909 * 0.8182  
+                        //-------------------------------------------
+                        // Lógica de asignación: EEM Algo
+
+                        if SHV_close > SHV_sma_50
+                        // *** EEM_close vs su MA200 ***
+                            if EEM_close > EEM_sma_200
+                                // => sub-bloque "IEI vs IWM" (se asigna la fracción entera 0.1818)
+                                if IEI_rsi_10 > IWM_rsi_15
+                                    EEM += 0.7857 * 0.1818
+                                else
+                                    SHV += 0.7857 * 0.1818
+                            else
+                                // => sub-bloque "IGIB vs EEM" + "IGIB vs SPY"
+                                // Cada uno con la MITAD => 0.0909
+                                float halfFrac = 0.1818 * 0.5
+                                
+                                // IGIB vs EEM
+                                if IGIB_rsi_15 > EEM_rsi_15
+                                    EEM += 0.7857 * halfFrac
+                                else
+                                    SHV += 0.7857 * halfFrac
+                                
+                                // IGIB vs SPY
+                                if IGIB_rsi_10 > SPY_rsi_10
+                                    EEM += 0.7857 * halfFrac
+                                else
+                                    SHV += 0.7857 * halfFrac
+                        else
+                            // "SHV no supera su SMA(50)" => Composer hace "IGIB vs SPY" 
+                            // pero SOLO un test (se lleva todo 0.1818)
+                            if IGIB_rsi_10 > SPY_rsi_10
+                                EEM += 0.7857 * 0.1818
+                            else
+                                SHV += 0.7857 * 0.1818
+
+// 0.2143 Block
+// Lógica de asignación
+if VIXY_rsi_10 > 85
+    // Crash en pleno desarrollo: rotamos completamente a SHV
+    SHV += 0.2143 *  1.0
+else
+    // Escalado en VIXM según volatilidad
+    if VIXM_rsi_10 > 80
+        // Volatilidad muy alta: 50% SHV, 50% VIXM
+        SHV += 0.2143 *  0.5
+        VIXM += 0.2143 *  0.5
+    else if VIXM_rsi_10 > 75
+        // Alta volatilidad: 100% VIXM
+        VIXM += 0.2143 *  1.0
+    else if VIXM_rsi_10 > 72.5
+        // Mediana-Alta volatilidad: más VIXM con SHV a partes iguales (50/50)
+        VIXM += 0.2143 *  0.5
+        SHV += 0.2143 *  0.5
+    else if VIXM_rsi_10 > 70
+        // Volatilidad levemente alta: Mild VIXM (25%) y más SHV (75%)
+        VIXM += 0.2143 *  0.25
+        SHV += 0.2143 *  0.75
+    else
+        // Ruta normal: moderar la volatilidad:
+        // 20% asignado a VIXM (Moderated VIXM) y 80% a B1&2
+        VIXM += 0.2143 *  0.2
+                        // Aquí ya tenemos la sección main tactical algo
+                        // En script1 la lógica era sumando fracciones, no sobreescribiendo.
+                        // Just Run This - simplified 11/11/24
+                        
+        if SPY_close > SPY_ma_200
+            QQQ += 0.2143 *  0.0909 * 0.8
+        else
+            if QQQ_cumret_60 < -12
+                SHV += 0.2143 *  0.5*0.0909 * 0.8
+                QQQ += 0.2143 *  0.5*0.0909 * 0.8
+            else
+                if TQQQ_close > TQQQ_sma_20
+                    QQQ += 0.2143 *  0.0909 * 0.8
+                else
+                    if QQQ_rsi_10 < 32.5
+                        SHV += 0.2143 *  0.0909 * 0.8
+                    else
+                        PSQ += 0.2143 *  0.0909 * 0.8
+
+        // 1999 FTLT w 100d MA macro filter
+        if SPY_close > SPY_ma_100
+            if QQQ_close > QQQ_ma_25
+                QQQ += 0.2143 *  0.0909 * 0.8
+            else
+                if QQQ_cumret_20 > QQQ_maRet_10
+                    QQQ += 0.2143 *  0.0909 * 0.8
+                else
+                    if AGG_cumret_60 > SHV_cumret_60
+                        QQQ += 0.2143 *  0.0909 * 0.8
+                    else
+                        if VWO_cumret_60 > SHV_cumret_60
+                            QQQ += 0.2143 *  0.0909 * 0.8
+                        else
+                            if IEF_rsi_7 > PSQ_rsi_20
+                                if QQQ_rsi_10 < 32.5
+                                    SHV += 0.2143 *  0.0909 * 0.8
+                                else
+                                    PSQ += 0.2143 *  0.0909 * 0.8
+                            else
+                                if QQQ_rsi_10 < 32.5
+                                    SHV += 0.2143 *  0.0909 * 0.8
+                                else
+                                    PSQ += 0.2143 *  0.0909 * 0.8
+        else
+            if QQQ_close > QQQ_ma_25
+                if QQQ_cumret_10 > 5
+                    if QQQ_rsi_10 < 32.5
+                        SHV += 0.2143 *  0.0909 * 0.8
+                    else
+                        PSQ += 0.2143 *  0.0909 * 0.8
+                else
+                    QQQ += 0.2143 *  0.0909 * 0.8
+            else
+                SHV += 0.2143 *  0.0909 * 0.8
+
+        // "LBT FTLT/Bull/Bonds with XLU/XLK RSI filter"
+        if XLU_rsi_126 < XLK_rsi_126
+            if AGG_rsi_20 > SH_rsi_60
+                QQQ += 0.2143 *  0.0909 * 0.8
+            else
+                if AGG_rsi_21 > SPY_rsi_21
+                    QQQ += 0.2143 *  0.0909 * 0.8
+                else
+                    if QQQ_rsi_10 < 32.5
+                        SHV += 0.2143 *  0.0909 * 0.8
+                    else
+                        PSQ += 0.2143 *  0.0909 * 0.8
+        else
+            if TLT_rsi_126 < 50
+                if AGG_rsi_20 > SH_rsi_60
+                    QQQ += 0.2143 *  0.0909 * 0.8
+                else
+                    if QQQ_rsi_10 < 32.5
+                        SHV += 0.2143 *  0.0909 * 0.8
+                    else
+                        PSQ += 0.2143 *  0.0909 * 0.8
+            else
+                if QQQ_rsi_10 < 32.5
+                    SHV += 0.2143 *  0.0909 * 0.8
+                else
+                    PSQ += 0.2143 *  0.0909 * 0.8
+
+        // "20/60 Machine - with 200d MA macro filter"
+        if SPY_close > SPY_ma_200
+            if AGG_rsi_20 > SH_rsi_60
+                QQQ += 0.2143 *  0.0909 * 0.8
+            else
+                if QQQ_rsi_10 < 32.5
+                    SHV += 0.2143 *  0.0909 * 0.8
+                else
+                    PSQ += 0.2143 *  0.0909 * 0.8
+        else
+            if QQQ_cumret_60 < -11
+                if AGG_rsi_10 > QQQ_rsi_10
+                    QQQ += 0.2143 *  0.0909 * 0.8
+                else
+                    if QQQ_rsi_10 < 32.5
+                        SHV += 0.2143 *  0.0909 * 0.8
+                    else
+                        PSQ += 0.2143 *  0.0909 * 0.8
+            else
+                if QQQ_close > QQQ_ma_20
+                    if TLT_rsi_21 > PSQ_rsi_21
+                        QQQ += 0.2143 *  0.0909 * 0.8
+                    else
+                        if QQQ_rsi_10 < 32.5
+                            SHV += 0.2143 *  0.0909 * 0.8
+                        else
+                            PSQ += 0.2143 *  0.0909 * 0.8
+                else
+                    if QQQ_rsi_10 < 32.5
+                        SHV += 0.2143 *  0.0909 * 0.8
+                    else
+                        PSQ += 0.2143 *  0.0909 * 0.8 
+                            
+        //---------------------------------------------
+        //"KMLM Variants"
+                // SPY vs KMLM -> 20d
+
+        if SPY_rsi_10 > KMLM_rsi_10
+            QQQ += 0.2143 *  0.0909 * 0.8*0.25
+        else
+            if KMLM_close < KMLM_ma_20
+                QQQ += 0.2143 *  0.0909 * 0.8*0.25
+            else
+                if QQQ_rsi_10 < 32.5
+                    SHV += 0.2143 *  0.0909 * 0.8*0.25
+                else
+                    PSQ += 0.2143 *  0.0909 * 0.8*0.25
+
+                // XLK vs KMLM -> 20d
+        if XLK_rsi_10 > KMLM_rsi_10
+            QQQ += 0.2143 *  0.0909 * 0.8*0.25
+        else
+            if KMLM_close < KMLM_ma_20
+                QQQ += 0.2143 *  0.0909 * 0.8*0.25
+            else
+                if QQQ_rsi_10 < 32.5
+                    SHV += 0.2143 *  0.0909 * 0.8*0.25
+                else
+                    PSQ += 0.2143 *  0.0909 * 0.8*0.25
+
+                // SMH vs KMLM -> 20d
+        if SMH_rsi_10 > KMLM_rsi_10
+            QQQ += 0.2143 *  0.0909 * 0.8*0.25
+        else
+            if KMLM_close < KMLM_ma_20
+                QQQ += 0.2143 *  0.0909 * 0.8*0.25
+            else
+                if QQQ_rsi_10 < 32.5
+                    SHV += 0.2143 *  0.0909 * 0.8*0.25
+                else
+                    PSQ += 0.2143 *  0.0909 * 0.8*0.25
+
+                // HYD vs KMLM
+        if HYD_rsi_10 > KMLM_rsi_10
+            QQQ += 0.2143 *  0.0909 * 0.8*0.25
+        else
+            if QQQ_rsi_10 < 32.5
+                SHV += 0.2143 *  0.0909 * 0.8*0.25
+            else
+                PSQ += 0.2143 *  0.0909 * 0.8*0.25
+
+        //---------------------------------------------
+        // "200d FDN vs 200d XLU | 2007-07-05"
+        if FDN_rsi_200 > XLU_rsi_200
+            // QQQ asignado directamente
+            QQQ += 0.2143 *  0.0909 * 0.8
+        else
+            // Verificamos momentum SPY 200d
+            if SPY_close > SPY_ma_200
+                // "Ok, still some momentum..."
+                if TLT_ma_10 > TLT_ma_50
+                    SHV += 0.2143 *  0.0909 * 0.8
+                else
+                    // "TLT isn't performing, how about Gold?"
+                    if GLD_ma_20 > GLD_ma_250
+                        GLD += 0.2143 *  0.0909 * 0.8
+                    else
+                        SHV += 0.2143 *  0.0909 * 0.8
+            else
+                // "Risk OFF..."
+                if QQQ_rsi_10 < 32.5
+                    // "ease up on the shorting as we're oversold"
+                    SHV += 0.2143 *  0.0909 * 0.8
+                else
+                    // Originalmente: filtra y selecciona top 2 de [PSQ, PSQ, TLT, TLT, GLD, SHV]
+                    PSQ += 0.2143 *  0.333 * 0.0909 * 0.8
+                    GLD += 0.2143 *  0.333 * 0.0909 * 0.8
+                    SHV += 0.2143 *  0.333 * 0.0909 * 0.8
+
+
+        // 2) "VWO momentum"
+        //
+            // Primero: "126d momentum vs VWO"
+
+        if VWO_cumret_126 > SHV_cumret_126
+            // bullish con VWO a 126d
+            if VWO_close > VWO_ma_126
+                // bullish
+                QQQ += 0.2143 *  0.0909 * 0.8 * 0.5
+            else
+                // balanced: QQQ + SHV
+                QQQ += 0.2143 *  0.5 * 0.0909 * 0.8 * 0.5
+                SHV += 0.2143 *  0.5 * 0.0909 * 0.8 * 0.5
+        else
+            // "We'll check SPY momentum..."
+            if SPY_close > SPY_ma_200
+                // Ok, momentum SPY
+                if TLT_ma_10 > TLT_ma_50
+                    SHV += 0.2143 *  0.0909 * 0.8 * 0.5
+                else
+                    // TLT isn't performing -> Gold?
+                    if GLD_ma_20 > GLD_ma_250
+                        GLD += 0.2143 *  0.0909 * 0.8 * 0.5
+                    else
+                        SHV += 0.2143 *  0.0909 * 0.8 * 0.5
+            else
+                // Risk OFF
+                if QQQ_rsi_10 < 32.5
+                    SHV += 0.2143 *  0.0909 * 0.8 * 0.5
+                else
+                    // Originalmente: filtra y selecciona top 2 de [PSQ, PSQ, TLT, TLT, GLD, SHV]
+                    PSQ += 0.2143 *  0.333 * 0.0909 * 0.8 * 0.5
+                    GLD += 0.2143 *  0.333 * 0.0909 * 0.8 * 0.5
+                    SHV += 0.2143 *  0.333 * 0.0909 * 0.8 * 0.5
+
+            // Ahora "63d momentum vs VWO"
+        
+        if VWO_cumret_63 > SHV_cumret_63
+            // bullish 63d
+            if VWO_close > VWO_ma_63
+                // bullish
+                QQQ += 0.2143 *  0.0909 * 0.8 * 0.5
+            else
+                // balanced (QQQ + SHV)
+                QQQ += 0.2143 *  0.5 * 0.0909 * 0.8 * 0.5
+                SHV += 0.2143 *  0.5 * 0.0909 * 0.8 * 0.5
+        else
+            // check SPY momentum
+            if SPY_close > SPY_ma_200
+                if TLT_ma_10 > TLT_ma_50
+                    SHV += 0.2143 *  0.0909 * 0.8 * 0.5
+                else
+                    if GLD_ma_20 > GLD_ma_250
+                        GLD += 0.2143 *  0.0909 * 0.8 * 0.5
+                    else
+                        SHV += 0.2143 *  0.0909 * 0.8 * 0.5
+            else
+                if QQQ_rsi_10 < 32.5
+                    SHV += 0.2143 *  0.0909 * 0.8 * 0.5
+                else
+                    // switch top 2 [PSQ, PSQ, TLT, TLT, GLD, SHV]
+                    // Ejemplo: PSQ y GLD
+                    PSQ += 0.2143 *  0.5 * 0.0909 * 0.8 * 0.5
+                    SHV += 0.2143 *  0.5 * 0.0909 * 0.8 * 0.5  
+        //---------------------------------------------
+        // "60d BND vs 60d BIL"
+
+        if BND_cumret_60 > SHV_cumret_60
+            // bullish but balanced => QQQ
+            QQQ += 0.2143 *  0.0909 * 0.8
+        else
+            // check SPY momentum
+            if SPY_close > SPY_ma_200
+                if TLT_ma_10 > TLT_ma_50
+                    SHV += 0.2143 *  0.0909 * 0.8
+                else
+                    if GLD_ma_20 > GLD_ma_250
+                        GLD += 0.2143 *  0.0909 * 0.8
+                    else
+                        SHV += 0.2143 *  0.0909 * 0.8
+            else
+                if QQQ_rsi_10 < 32.5
+                    SHV += 0.2143 *  0.0909 * 0.8
+                else
+                    // Originalmente: filtra y selecciona top 2 de [PSQ, PSQ, TLT, TLT, GLD, SHV]
+                    PSQ += 0.2143 *  0.333 * 0.0909 * 0.8
+                    GLD += 0.2143 *  0.333 * 0.0909 * 0.8
+                    SHV += 0.2143 *  0.333 * 0.0909 * 0.8
+
+        //---------------------------------------------
+        // 4) "20/60 -> 10/20"
+
+
+        if AGG_rsi_20 > SH_rsi_60
+            // bullish but balanced => QQQ
+            QQQ += 0.2143 *  0.0909 * 0.8
+        else
+            if IEF_rsi_10 > PSQ_rsi_20
+                // bullish but balanced => QQQ
+                QQQ += 0.2143 *  0.0909 * 0.8
+            else
+                // check SPY momentum
+                if SPY_close > SPY_ma_200
+                    if TLT_ma_10 > TLT_ma_50
+                        SHV += 0.2143 *  0.0909 * 0.8
+                    else
+                        if GLD_ma_20 > GLD_ma_250
+                            GLD += 0.2143 *  0.0909 * 0.8
+                        else
+                            SHV += 0.2143 *  0.0909 * 0.8
+                else
+                    if QQQ_rsi_10 < 32.5
+                        SHV += 0.2143 *  0.0909 * 0.8
+                    else
+                    // Originalmente: filtra y selecciona top 2 de [PSQ, PSQ, TLT, TLT, GLD, SHV]
+                        PSQ += 0.2143 *  0.333 * 0.0909 * 0.8
+                        GLD += 0.2143 *  0.333 * 0.0909 * 0.8
+                        SHV += 0.2143 *  0.333 * 0.0909 * 0.8 
+        // "20d AGG vs 60d SH"
+        if AGG_rsi_20 > SH_rsi_60
+            // bullish but balanced => QQQ
+            QQQ += 0.2143 *  0.0909 * 0.8
+        else
+            // check SPY momentum
+            if SPY_close > SPY_ma_200
+                // Momentum SPY presente
+                if TLT_ma_10 > TLT_ma_50
+                    SHV += 0.2143 *  0.0909 * 0.8
+                else
+                    // TLT no rinde, probar Gold
+                    if GLD_ma_20 > GLD_ma_250
+                        GLD += 0.2143 *  0.0909 * 0.8
+                    else
+                        SHV += 0.2143 *  0.0909 * 0.8
+            else
+                // Risk OFF
+                if QQQ_rsi_10 < 32.5
+                    // ease up on shorting: SHV
+                    SHV += 0.2143 *  0.0909 * 0.8
+                else
+                    // Originalmente: filtra y selecciona top 2 de [PSQ, PSQ, TLT, TLT, GLD, SHV]
+                    PSQ += 0.2143 *  0.333 * 0.0909 * 0.8
+                    GLD += 0.2143 *  0.333 * 0.0909 * 0.8
+                    SHV += 0.2143 *  0.333 * 0.0909 * 0.8
+
+        //---------------------------------------------
+        // "20d TLT vs 20d PSQ"
+
+
+        if TLT_rsi_20 > PSQ_rsi_20
+            // bullish but balanced => QQQ
+            QQQ += 0.2143 *  0.0909 * 0.8
+        else
+            // check SPY momentum again
+            if SPY_close > SPY_ma_200
+                if TLT_ma_10 > TLT_ma_50
+                    SHV += 0.2143 *  0.0909 * 0.8
+                else
+                    // TLT no rinde, probar Gold
+                    if GLD_ma_20 > GLD_ma_250
+                        GLD += 0.2143 *  0.0909 * 0.8
+                    else
+                        SHV += 0.2143 *  0.0909 * 0.8
+            else
+                // Risk OFF
+                if QQQ_rsi_10 < 32.5
+                    SHV += 0.2143 *  0.0909 * 0.8
+                else
+                    // Originalmente: filtra y selecciona top 2 de [PSQ, PSQ, TLT, TLT, GLD, SHV]
+                    PSQ += 0.2143 *  0.333 * 0.0909 * 0.8
+                    GLD += 0.2143 *  0.333 * 0.0909 * 0.8
+                    SHV += 0.2143 *  0.333 * 0.0909 * 0.8 
+                        
+//-------------------------------------------
+// Normalizar asignaciones como en SCRIPT1
+float total = QQQ + SHV + VIXM + PSQ + GLD + EEM 
+if total > 0
+    QQQ := QQQ/total
+    SHV := SHV/total
+    VIXM := VIXM/total
+    PSQ := PSQ/total
+    GLD := GLD/total
+    EEM := EEM/total
+    
+
+
+//-------------------------------------------
+// Graficar las asignaciones
+plot(EEM, title="EEM Allocation", color=color.rgb(125, 79, 146), style=plot.style_columns)
+plot(GLD, title="GLD Allocation", color=#fdd211, style=plot.style_columns)
+plot(PSQ, title="PSQ Allocation", color=color.new(color.red,0), style=plot.style_columns)
+plot(QQQ, title="QQQ Allocation", color=color.new(color.green,0), style=plot.style_columns)
+plot(SHV, title="SHV Allocation", color=color.new(color.yellow,0), style=plot.style_columns)
+plot(VIXM, title="VIXM Allocation", color=color.new(color.purple,0), style=plot.style_columns)
+

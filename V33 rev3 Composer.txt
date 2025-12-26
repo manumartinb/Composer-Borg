@@ -1,0 +1,1217 @@
+(defsymphony
+ "[ManuMB Reduced V2] Borg Collective V33 rev3"
+ {:asset-class "EQUITIES", :rebalance-threshold 0.15}
+ (weight-equal
+  [(group
+    "Leveraged Borg Collective V33_rev3 w QLD | sans Block 3"
+    [(weight-specified
+      0.33
+      (group
+       "Block 2 & KMLM Variants: Enhanced - QLD|PSQ algos "
+       [(weight-equal
+         [(weight-specified
+           0.5
+           (group
+            "Block 2. w UGL(x2) and TMF"
+            [(weight-equal
+              [(group
+                "check for basic SPY momentum before evaluating core signals"
+                [(weight-equal
+                  [(if
+                    (>
+                     (current-price "SPY")
+                     (moving-average-price "SPY" {:window 30}))
+                    [(group
+                      "200d FDN vs 200d XLU | 2007-07-05"
+                      [(weight-equal
+                        [(if
+                          (>
+                           (rsi "FDN" {:window 200})
+                           (rsi "XLU" {:window 200}))
+                          [(weight-equal
+                            [(asset
+                              "QLD"
+                              "ProShares Trust - ProShares Ultra QQQ 2x Shares")])]
+                          [(weight-equal
+                            [(group
+                              "We'll check for SPY momentum before going risk off, this is our secondary bullish check"
+                              [(weight-equal
+                                [(if
+                                  (>
+                                   (current-price "SPY")
+                                   (moving-average-price
+                                    "SPY"
+                                    {:window 200}))
+                                  [(weight-equal
+                                    [(group
+                                      "Ok, still some momentum even though tech has weakened, maybe long duration treasuries are worth jumping into"
+                                      [(weight-equal
+                                        [(if
+                                          (>
+                                           (moving-average-price
+                                            "TLT"
+                                            {:window 10})
+                                           (moving-average-price
+                                            "TLT"
+                                            {:window 50}))
+                                          [(weight-inverse-volatility
+                                            10
+                                            [(asset "SHV" nil)
+                                             (asset
+                                              "QLD"
+                                              "ProShares Trust - ProShares Ultra QQQ 2x Shares")])]
+                                          [(group
+                                            "TLT isn't performing, how about Gold?"
+                                            [(weight-equal
+                                              [(if
+                                                (>
+                                                 (moving-average-price
+                                                  "GLD"
+                                                  {:window 20})
+                                                 (moving-average-price
+                                                  "GLD"
+                                                  {:window 250}))
+                                                [(weight-inverse-volatility
+                                                  15
+                                                  [(asset "SHV" nil)
+                                                   (asset "SHV" nil)
+                                                   (asset
+                                                    "QLD"
+                                                    "ProShares Trust - ProShares Ultra QQQ 2x Shares")])]
+                                                [(asset
+                                                  "SHV"
+                                                  "iShares Short Treasury Bond ETF")])])])])])])])]
+                                  [(group
+                                    "Risk OFF as neither bullish check has held. But now let's look to ride some pops off the bottom too "
+                                    [(weight-equal
+                                      [(group
+                                        "switch between best 2 risk off assets"
+                                        [(weight-equal
+                                          [(asset
+                                            "SHV"
+                                            "iShares Short Treasury Bond ETF")
+                                           (asset
+                                            "SHV"
+                                            "BlackRock Institutional Trust Company N.A. - iShares Short Treasury Bond ETF")
+                                           (asset
+                                            "PSQ"
+                                            "ProShares Trust - ProShares Short QQQ -1x Shares")])])])])])])])])])])])
+                     (group
+                      "VWO momentum"
+                      [(weight-equal
+                        [(group
+                          "126d momentum vs VWO"
+                          [(weight-equal
+                            [(if
+                              (>
+                               (cumulative-return "VWO" {:window 126})
+                               (cumulative-return "SHV" {:window 126}))
+                              [(weight-equal
+                                [(if
+                                  (>
+                                   (current-price "VWO")
+                                   (moving-average-price
+                                    "VWO"
+                                    {:window 126}))
+                                  [(asset
+                                    "QLD"
+                                    "ProShares Trust - ProShares Ultra QQQ 2x Shares")]
+                                  [(group
+                                    " balanced"
+                                    [(weight-equal
+                                      [(asset "SHV" nil)
+                                       (asset
+                                        "QLD"
+                                        "ProShares Trust - ProShares Ultra QQQ 2x Shares")])])])])]
+                              [(group
+                                "We'll check for SPY momentum before going risk off, this is our secondary bullish check"
+                                [(weight-equal
+                                  [(if
+                                    (>
+                                     (current-price "SPY")
+                                     (moving-average-price
+                                      "SPY"
+                                      {:window 200}))
+                                    [(weight-equal
+                                      [(group
+                                        "Ok, still some momentum even though tech has weakened, maybe long duration treasuries are worth jumping into"
+                                        [(weight-equal
+                                          [(if
+                                            (>
+                                             (moving-average-price
+                                              "TLT"
+                                              {:window 10})
+                                             (moving-average-price
+                                              "TLT"
+                                              {:window 50}))
+                                            [(weight-inverse-volatility
+                                              10
+                                              [(asset "SHV" nil)
+                                               (asset
+                                                "QLD"
+                                                "ProShares Trust - ProShares Ultra QQQ 2x Shares")])]
+                                            [(group
+                                              "TLT isn't performing, how about Gold?"
+                                              [(weight-equal
+                                                [(if
+                                                  (>
+                                                   (moving-average-price
+                                                    "GLD"
+                                                    {:window 20})
+                                                   (moving-average-price
+                                                    "GLD"
+                                                    {:window 250}))
+                                                  [(weight-inverse-volatility
+                                                    15
+                                                    [(asset "SHV" nil)
+                                                     (asset "SHV" nil)
+                                                     (asset
+                                                      "QLD"
+                                                      "ProShares Trust - ProShares Ultra QQQ 2x Shares")])]
+                                                  [(asset
+                                                    "SHV"
+                                                    "iShares Short Treasury Bond ETF")])])])])])])])]
+                                    [(group
+                                      "Risk OFF as neither bullish check has held. But now let's look to ride some pops off the bottom too "
+                                      [(weight-equal
+                                        [(group
+                                          "switch between best 2 risk off assets"
+                                          [(weight-equal
+                                            [(asset
+                                              "SHV"
+                                              "iShares Short Treasury Bond ETF")
+                                             (asset
+                                              "SHV"
+                                              "BlackRock Institutional Trust Company N.A. - iShares Short Treasury Bond ETF")
+                                             (asset
+                                              "PSQ"
+                                              "ProShares Trust - ProShares Short QQQ -1x Shares")])])])])])])])])])])
+                         (group
+                          "63d momentum vs VWO"
+                          [(weight-equal
+                            [(if
+                              (>
+                               (cumulative-return "VWO" {:window 63})
+                               (cumulative-return "SHV" {:window 63}))
+                              [(weight-equal
+                                [(if
+                                  (>
+                                   (current-price "VWO")
+                                   (moving-average-price
+                                    "VWO"
+                                    {:window 63}))
+                                  [(asset
+                                    "QLD"
+                                    "ProShares Trust - ProShares Ultra QQQ 2x Shares")]
+                                  [(group
+                                    " balanced"
+                                    [(weight-equal
+                                      [(asset "SHV" nil)
+                                       (asset
+                                        "QLD"
+                                        "ProShares Trust - ProShares Ultra QQQ 2x Shares")])])])])]
+                              [(group
+                                "We'll check for SPY momentum before going risk off, this is our secondary bullish check"
+                                [(weight-equal
+                                  [(if
+                                    (>
+                                     (current-price "SPY")
+                                     (moving-average-price
+                                      "SPY"
+                                      {:window 200}))
+                                    [(weight-equal
+                                      [(group
+                                        "Ok, still some momentum even though tech has weakened, maybe long duration treasuries are worth jumping into"
+                                        [(weight-equal
+                                          [(if
+                                            (>
+                                             (moving-average-price
+                                              "TLT"
+                                              {:window 10})
+                                             (moving-average-price
+                                              "TLT"
+                                              {:window 50}))
+                                            [(weight-inverse-volatility
+                                              10
+                                              [(asset "SHV" nil)
+                                               (asset
+                                                "QLD"
+                                                "ProShares Trust - ProShares Ultra QQQ 2x Shares")])]
+                                            [(group
+                                              "TLT isn't performing, how about Gold?"
+                                              [(weight-equal
+                                                [(if
+                                                  (>
+                                                   (moving-average-price
+                                                    "GLD"
+                                                    {:window 20})
+                                                   (moving-average-price
+                                                    "GLD"
+                                                    {:window 250}))
+                                                  [(weight-inverse-volatility
+                                                    15
+                                                    [(asset "SHV" nil)
+                                                     (asset "SHV" nil)
+                                                     (asset
+                                                      "QLD"
+                                                      "ProShares Trust - ProShares Ultra QQQ 2x Shares")])]
+                                                  [(asset
+                                                    "SHV"
+                                                    "iShares Short Treasury Bond ETF")])])])])])])])]
+                                    [(group
+                                      "Risk OFF as neither bullish check has held. But now let's look to ride some pops off the bottom too "
+                                      [(weight-equal
+                                        [(group
+                                          "switch between best 2 risk off assets"
+                                          [(weight-equal
+                                            [(asset
+                                              "SHV"
+                                              "iShares Short Treasury Bond ETF")
+                                             (asset
+                                              "SHV"
+                                              "BlackRock Institutional Trust Company N.A. - iShares Short Treasury Bond ETF")
+                                             (asset
+                                              "PSQ"
+                                              "ProShares Trust - ProShares Short QQQ -1x Shares")])])])])])])])])])])])])
+                     (group
+                      "60d BND vs 60d BIL "
+                      [(weight-equal
+                        [(if
+                          (>
+                           (cumulative-return "BND" {:window 60})
+                           (cumulative-return "SHV" {:window 60}))
+                          [(weight-equal
+                            [(asset
+                              "QLD"
+                              "ProShares Trust - ProShares Ultra QQQ 2x Shares")])]
+                          [(weight-equal
+                            [(group
+                              "We'll check for SPY momentum before going risk off, this is our secondary bullish check"
+                              [(weight-equal
+                                [(if
+                                  (>
+                                   (current-price "SPY")
+                                   (moving-average-price
+                                    "SPY"
+                                    {:window 200}))
+                                  [(weight-equal
+                                    [(group
+                                      "Ok, still some momentum even though tech has weakened, maybe long duration treasuries are worth jumping into"
+                                      [(weight-equal
+                                        [(if
+                                          (>
+                                           (moving-average-price
+                                            "TLT"
+                                            {:window 10})
+                                           (moving-average-price
+                                            "TLT"
+                                            {:window 50}))
+                                          [(weight-inverse-volatility
+                                            10
+                                            [(asset "SHV" nil)
+                                             (asset
+                                              "QLD"
+                                              "ProShares Trust - ProShares Ultra QQQ 2x Shares")])]
+                                          [(group
+                                            "TLT isn't performing, how about Gold?"
+                                            [(weight-equal
+                                              [(if
+                                                (>
+                                                 (moving-average-price
+                                                  "GLD"
+                                                  {:window 20})
+                                                 (moving-average-price
+                                                  "GLD"
+                                                  {:window 250}))
+                                                [(weight-inverse-volatility
+                                                  15
+                                                  [(asset "SHV" nil)
+                                                   (asset "SHV" nil)
+                                                   (asset
+                                                    "QLD"
+                                                    "ProShares Trust - ProShares Ultra QQQ 2x Shares")])]
+                                                [(asset
+                                                  "SHV"
+                                                  "iShares Short Treasury Bond ETF")])])])])])])])]
+                                  [(group
+                                    "Risk OFF as neither bullish check has held. But now let's look to ride some pops off the bottom too "
+                                    [(weight-equal
+                                      [(group
+                                        "switch between best 2 risk off assets"
+                                        [(weight-equal
+                                          [(asset
+                                            "SHV"
+                                            "iShares Short Treasury Bond ETF")
+                                           (asset
+                                            "SHV"
+                                            "BlackRock Institutional Trust Company N.A. - iShares Short Treasury Bond ETF")
+                                           (asset
+                                            "PSQ"
+                                            "ProShares Trust - ProShares Short QQQ -1x Shares")])])])])])])])])])])])
+                     (group
+                      "20/60 -> 10/20"
+                      [(weight-equal
+                        [(if
+                          (>
+                           (rsi "AGG" {:window 20})
+                           (rsi "SH" {:window 60}))
+                          [(weight-equal
+                            [(asset
+                              "QLD"
+                              "ProShares Trust - ProShares Ultra QQQ 2x Shares")])]
+                          [(weight-equal
+                            [(if
+                              (>
+                               (rsi "IEF" {:window 10})
+                               (rsi "PSQ" {:window 20}))
+                              [(asset
+                                "QLD"
+                                "ProShares Trust - ProShares Ultra QQQ 2x Shares")]
+                              [(weight-equal
+                                [(group
+                                  "We'll check for SPY momentum before going risk off, this is our secondary bullish check"
+                                  [(weight-equal
+                                    [(if
+                                      (>
+                                       (current-price "SPY")
+                                       (moving-average-price
+                                        "SPY"
+                                        {:window 200}))
+                                      [(weight-equal
+                                        [(group
+                                          "Ok, still some momentum even though tech has weakened, maybe long duration treasuries are worth jumping into"
+                                          [(weight-equal
+                                            [(if
+                                              (>
+                                               (moving-average-price
+                                                "TLT"
+                                                {:window 10})
+                                               (moving-average-price
+                                                "TLT"
+                                                {:window 50}))
+                                              [(weight-inverse-volatility
+                                                10
+                                                [(asset "SHV" nil)
+                                                 (asset
+                                                  "QLD"
+                                                  "ProShares Trust - ProShares Ultra QQQ 2x Shares")])]
+                                              [(group
+                                                "TLT isn't performing, how about Gold?"
+                                                [(weight-equal
+                                                  [(if
+                                                    (>
+                                                     (moving-average-price
+                                                      "GLD"
+                                                      {:window 20})
+                                                     (moving-average-price
+                                                      "GLD"
+                                                      {:window 250}))
+                                                    [(weight-inverse-volatility
+                                                      15
+                                                      [(asset
+                                                        "SHV"
+                                                        nil)
+                                                       (asset
+                                                        "SHV"
+                                                        nil)
+                                                       (asset
+                                                        "QLD"
+                                                        "ProShares Trust - ProShares Ultra QQQ 2x Shares")])]
+                                                    [(asset
+                                                      "SHV"
+                                                      "iShares Short Treasury Bond ETF")])])])])])])])]
+                                      [(group
+                                        "Risk OFF as neither bullish check has held. But now let's look to ride some pops off the bottom too "
+                                        [(weight-equal
+                                          [(group
+                                            "switch between best 2 risk off assets"
+                                            [(weight-equal
+                                              [(asset
+                                                "SHV"
+                                                "iShares Short Treasury Bond ETF")
+                                               (asset
+                                                "SHV"
+                                                "BlackRock Institutional Trust Company N.A. - iShares Short Treasury Bond ETF")
+                                               (asset
+                                                "PSQ"
+                                                "ProShares Trust - ProShares Short QQQ -1x Shares")])])])])])])])])])])])])])
+                     (group
+                      "20d TLT vs 20d PSQ "
+                      [(weight-equal
+                        [(if
+                          (>
+                           (rsi "TLT" {:window 20})
+                           (rsi "PSQ" {:window 20}))
+                          [(weight-equal
+                            [(asset
+                              "QLD"
+                              "ProShares Trust - ProShares Ultra QQQ 2x Shares")])]
+                          [(weight-equal
+                            [(group
+                              "We'll check for SPY momentum before going risk off, this is our secondary bullish check"
+                              [(weight-equal
+                                [(if
+                                  (>
+                                   (current-price "SPY")
+                                   (moving-average-price
+                                    "SPY"
+                                    {:window 200}))
+                                  [(weight-equal
+                                    [(group
+                                      "Ok, still some momentum even though tech has weakened, maybe long duration treasuries are worth jumping into"
+                                      [(weight-equal
+                                        [(if
+                                          (>
+                                           (moving-average-price
+                                            "TLT"
+                                            {:window 10})
+                                           (moving-average-price
+                                            "TLT"
+                                            {:window 50}))
+                                          [(weight-inverse-volatility
+                                            10
+                                            [(asset "SHV" nil)
+                                             (asset
+                                              "QLD"
+                                              "ProShares Trust - ProShares Ultra QQQ 2x Shares")])]
+                                          [(group
+                                            "TLT isn't performing, how about Gold?"
+                                            [(weight-equal
+                                              [(if
+                                                (>
+                                                 (moving-average-price
+                                                  "GLD"
+                                                  {:window 20})
+                                                 (moving-average-price
+                                                  "GLD"
+                                                  {:window 250}))
+                                                [(weight-inverse-volatility
+                                                  15
+                                                  [(asset "SHV" nil)
+                                                   (asset "SHV" nil)
+                                                   (asset
+                                                    "QLD"
+                                                    "ProShares Trust - ProShares Ultra QQQ 2x Shares")])]
+                                                [(asset
+                                                  "SHV"
+                                                  "iShares Short Treasury Bond ETF")])])])])])])])]
+                                  [(group
+                                    "Risk OFF as neither bullish check has held. But now let's look to ride some pops off the bottom too "
+                                    [(weight-equal
+                                      [(group
+                                        "switch between best 2 risk off assets"
+                                        [(weight-equal
+                                          [(asset
+                                            "SHV"
+                                            "iShares Short Treasury Bond ETF")
+                                           (asset
+                                            "SHV"
+                                            "BlackRock Institutional Trust Company N.A. - iShares Short Treasury Bond ETF")
+                                           (asset
+                                            "PSQ"
+                                            "ProShares Trust - ProShares Short QQQ -1x Shares")])])])])])])])])])])])
+                     (group
+                      "20d AGG vs 60d SH "
+                      [(weight-equal
+                        [(if
+                          (>
+                           (rsi "AGG" {:window 20})
+                           (rsi "SH" {:window 60}))
+                          [(weight-equal [(asset "QLD" nil)])]
+                          [(weight-equal
+                            [(group
+                              "We'll check for SPY momentum before going risk off, this is our secondary bullish check"
+                              [(weight-equal
+                                [(if
+                                  (>
+                                   (current-price "SPY")
+                                   (moving-average-price
+                                    "SPY"
+                                    {:window 200}))
+                                  [(weight-equal
+                                    [(group
+                                      "Ok, still some momentum even though tech has weakened, maybe long duration treasuries are worth jumping into"
+                                      [(weight-equal
+                                        [(if
+                                          (>
+                                           (moving-average-price
+                                            "TLT"
+                                            {:window 10})
+                                           (moving-average-price
+                                            "TLT"
+                                            {:window 50}))
+                                          [(weight-inverse-volatility
+                                            10
+                                            [(asset "SHV" nil)
+                                             (asset
+                                              "QLD"
+                                              "ProShares Trust - ProShares Ultra QQQ 2x Shares")])]
+                                          [(group
+                                            "TLT isn't performing, how about Gold?"
+                                            [(weight-equal
+                                              [(if
+                                                (>
+                                                 (moving-average-price
+                                                  "GLD"
+                                                  {:window 20})
+                                                 (moving-average-price
+                                                  "GLD"
+                                                  {:window 250}))
+                                                [(weight-inverse-volatility
+                                                  15
+                                                  [(asset "SHV" nil)
+                                                   (asset "SHV" nil)
+                                                   (asset
+                                                    "QLD"
+                                                    "ProShares Trust - ProShares Ultra QQQ 2x Shares")])]
+                                                [(asset
+                                                  "SHV"
+                                                  "iShares Short Treasury Bond ETF")])])])])])])])]
+                                  [(group
+                                    "Risk OFF as neither bullish check has held. But now let's look to ride some pops off the bottom too "
+                                    [(weight-equal
+                                      [(group
+                                        "switch between best 2 risk off assets"
+                                        [(weight-equal
+                                          [(asset
+                                            "SHV"
+                                            "iShares Short Treasury Bond ETF")
+                                           (asset
+                                            "SHV"
+                                            "BlackRock Institutional Trust Company N.A. - iShares Short Treasury Bond ETF")
+                                           (asset
+                                            "PSQ"
+                                            "ProShares Trust - ProShares Short QQQ -1x Shares")])])])])])])])])])])])]
+                    [(weight-equal
+                      [(group
+                        "We'll check for SPY momentum before going risk off, this is our secondary bullish check"
+                        [(weight-equal
+                          [(if
+                            (>
+                             (current-price "SPY")
+                             (moving-average-price
+                              "SPY"
+                              {:window 200}))
+                            [(weight-equal
+                              [(group
+                                "Ok, still some momentum even though tech has weakened, maybe long duration treasuries are worth jumping into"
+                                [(weight-equal
+                                  [(if
+                                    (>
+                                     (moving-average-price
+                                      "TLT"
+                                      {:window 10})
+                                     (moving-average-price
+                                      "TLT"
+                                      {:window 50}))
+                                    [(weight-inverse-volatility
+                                      10
+                                      [(asset "SHV" nil)
+                                       (asset
+                                        "QLD"
+                                        "ProShares Trust - ProShares Ultra QQQ 2x Shares")])]
+                                    [(group
+                                      "TLT isn't performing, how about Gold?"
+                                      [(weight-equal
+                                        [(if
+                                          (>
+                                           (moving-average-price
+                                            "GLD"
+                                            {:window 20})
+                                           (moving-average-price
+                                            "GLD"
+                                            {:window 250}))
+                                          [(weight-inverse-volatility
+                                            15
+                                            [(asset "SHV" nil)
+                                             (asset "SHV" nil)
+                                             (asset
+                                              "QLD"
+                                              "ProShares Trust - ProShares Ultra QQQ 2x Shares")])]
+                                          [(asset
+                                            "SHV"
+                                            "iShares Short Treasury Bond ETF")])])])])])])])]
+                            [(group
+                              "Risk OFF as neither bullish check has held. But now let's look to ride some pops off the bottom too "
+                              [(weight-equal
+                                [(group
+                                  "switch between best 2 risk off assets"
+                                  [(weight-equal
+                                    [(asset
+                                      "SHV"
+                                      "iShares Short Treasury Bond ETF")
+                                     (asset
+                                      "SHV"
+                                      "BlackRock Institutional Trust Company N.A. - iShares Short Treasury Bond ETF")
+                                     (asset
+                                      "PSQ"
+                                      "ProShares Trust - ProShares Short QQQ -1x Shares")])])])])])])])])])])])])])
+           0.5
+           (group
+            "KMLM Variants w dump catcher"
+            [(weight-equal
+              [(if
+                (< (cumulative-return "QQQ" {:window 5}) -5.5)
+                [(group
+                  "big down move has happened"
+                  [(weight-equal
+                    [(asset "SHV" nil)
+                     (asset
+                      "SHV"
+                      "BlackRock Institutional Trust Company N.A. - iShares Short Treasury Bond ETF")])])]
+                [(weight-equal
+                  [(group
+                    "KMLM Variants"
+                    [(weight-equal
+                      [(if
+                        (< (cumulative-return "QQQ" {:window 5}) -5.5)
+                        [(group
+                          "big down move has happened"
+                          [(weight-equal
+                            [(asset "SHV" nil)
+                             (asset
+                              "SHV"
+                              "BlackRock Institutional Trust Company N.A. - iShares Short Treasury Bond ETF")])])]
+                        [(weight-equal
+                          [(group
+                            "KMLM Variants"
+                            [(weight-equal
+                              [(group
+                                "SPY vs KMLM -> 20d"
+                                [(weight-equal
+                                  [(if
+                                    (>
+                                     (rsi "SPY" {:window 10})
+                                     (rsi "KMLM" {:window 10}))
+                                    [(asset "QLD" nil)]
+                                    [(weight-equal
+                                      [(if
+                                        (<
+                                         (current-price "KMLM")
+                                         (moving-average-price
+                                          "KMLM"
+                                          {:window 20}))
+                                        [(asset "QLD" nil)]
+                                        [(weight-equal
+                                          [(if
+                                            (<
+                                             (rsi "QQQ" {:window 10})
+                                             32.5)
+                                            [(asset
+                                              "SHV"
+                                              "iShares Short Treasury Bond ETF")]
+                                            [(weight-equal
+                                              [(asset
+                                                "PSQ"
+                                                "ProShares Trust - ProShares Short QQQ -1x Shares")])])])])])])])])
+                               (group
+                                "XLK vs KMLM -> 20d"
+                                [(weight-equal
+                                  [(if
+                                    (>
+                                     (rsi "XLK" {:window 10})
+                                     (rsi "KMLM" {:window 10}))
+                                    [(asset "QLD" nil)]
+                                    [(weight-equal
+                                      [(if
+                                        (<
+                                         (current-price "KMLM")
+                                         (moving-average-price
+                                          "KMLM"
+                                          {:window 20}))
+                                        [(asset "QLD" nil)]
+                                        [(weight-equal
+                                          [(if
+                                            (<
+                                             (rsi "QQQ" {:window 10})
+                                             32.5)
+                                            [(asset
+                                              "SHV"
+                                              "iShares Short Treasury Bond ETF")]
+                                            [(weight-equal
+                                              [(if
+                                                (<
+                                                 (rsi
+                                                  "QQQ"
+                                                  {:window 10})
+                                                 32.5)
+                                                [(asset
+                                                  "SHV"
+                                                  "iShares Short Treasury Bond ETF")]
+                                                [(weight-equal
+                                                  [(asset
+                                                    "PSQ"
+                                                    "ProShares Trust - ProShares Short QQQ -1x Shares")])])])])])])])])])])
+                               (group
+                                "SMH vs KMLM -> 20d"
+                                [(weight-equal
+                                  [(if
+                                    (>
+                                     (rsi "SMH" {:window 10})
+                                     (rsi "KMLM" {:window 10}))
+                                    [(asset "QLD" nil)]
+                                    [(weight-equal
+                                      [(if
+                                        (<
+                                         (current-price "KMLM")
+                                         (moving-average-price
+                                          "KMLM"
+                                          {:window 20}))
+                                        [(asset "QLD" nil)]
+                                        [(weight-equal
+                                          [(if
+                                            (<
+                                             (rsi "QQQ" {:window 10})
+                                             32.5)
+                                            [(asset
+                                              "SHV"
+                                              "iShares Short Treasury Bond ETF")]
+                                            [(weight-equal
+                                              [(asset
+                                                "PSQ"
+                                                "ProShares Trust - ProShares Short QQQ -1x Shares")])])])])])])])])
+                               (group
+                                "HYD vs KMLM"
+                                [(weight-equal
+                                  [(if
+                                    (>
+                                     (rsi "HYD" {:window 10})
+                                     (rsi "KMLM" {:window 10}))
+                                    [(asset "QLD" nil)]
+                                    [(weight-equal
+                                      [(if
+                                        (<
+                                         (rsi "QQQ" {:window 10})
+                                         32.5)
+                                        [(asset
+                                          "SHV"
+                                          "iShares Short Treasury Bond ETF")]
+                                        [(weight-equal
+                                          [(if
+                                            (<
+                                             (rsi "QQQ" {:window 10})
+                                             32.5)
+                                            [(asset
+                                              "SHV"
+                                              "iShares Short Treasury Bond ETF")]
+                                            [(weight-equal
+                                              [(asset
+                                                "PSQ"
+                                                "ProShares Trust - ProShares Short QQQ -1x Shares")])])])])])])])])])])])])])])])])])]))])])
+      0.33
+      (group
+       "Hedged Equity Only V8 (w Just Run This) QLD w VIXY"
+       [(weight-equal
+         [(if
+           (> (rsi "VIXM" {:window 10}) 85)
+           [(group
+             "vol really high we should get out of Vol, and run to cash"
+             [(weight-equal
+               [(asset "SHV" "iShares Short Treasury Bond ETF")])])]
+           [(weight-equal
+             [(group
+               "PROACTIVE HEDGING: overbought checks, i.e. likely really low vol situations, where we might be able to safely jump into vol, and ride a pop"
+               [(weight-equal
+                 [(if
+                   (> (rsi "SPY" {:window 10}) 79)
+                   [(group
+                     "moderated VIXY"
+                     [(weight-equal [(asset "VIXM" nil)])])]
+                   [(weight-equal
+                     [(if
+                       (> (rsi "SCHX" {:window 10}) 79)
+                       [(group
+                         "moderated VIXY"
+                         [(weight-equal [(asset "VIXM" nil)])])]
+                       [(weight-equal
+                         [(if
+                           (> (rsi "MGC" {:window 10}) 79)
+                           [(group
+                             "moderated VIXY"
+                             [(weight-equal [(asset "VIXM" nil)])])]
+                           [(weight-equal
+                             [(if
+                               (> (rsi "IOO" {:window 10}) 79)
+                               [(group
+                                 "moderated VIXY"
+                                 [(weight-equal
+                                   [(asset "VIXM" nil)])])]
+                               [(weight-equal
+                                 [(if
+                                   (> (rsi "XLP" {:window 10}) 76)
+                                   [(group
+                                     "moderated VIXY"
+                                     [(weight-equal
+                                       [(asset "VIXM" nil)])])]
+                                   [(weight-equal
+                                     [(if
+                                       (> (rsi "VTV" {:window 10}) 78)
+                                       [(group
+                                         "moderated VIXY"
+                                         [(weight-equal
+                                           [(asset "VIXM" nil)])])]
+                                       [(weight-equal
+                                         [(if
+                                           (>
+                                            (rsi "VOX" {:window 10})
+                                            78)
+                                           [(group
+                                             "moderated VIXY"
+                                             [(weight-equal
+                                               [(asset "VIXM" nil)])])]
+                                           [(weight-equal
+                                             [(if
+                                               (>
+                                                (rsi
+                                                 "XLF"
+                                                 {:window 10})
+                                                80)
+                                               [(group
+                                                 "moderated VIXY"
+                                                 [(weight-equal
+                                                   [(asset
+                                                     "VIXM"
+                                                     nil)])])]
+                                               [(weight-equal
+                                                 [(if
+                                                   (>
+                                                    (rsi
+                                                     "TQQQ"
+                                                     {:window 10})
+                                                    83)
+                                                   [(group
+                                                     "moderated VIXY"
+                                                     [(weight-equal
+                                                       [(asset
+                                                         "VIXM"
+                                                         nil)])])]
+                                                   [(weight-equal
+                                                     [(group
+                                                       "Normal Path w PROACTIVE HEDGING: cautious bullishness, and we may lace in some VIXY, we can moderate how much VIXY we get by adding more bullish entries to the inverse vol weighting. If you want a stronger hedge then run with a 1:1 ratio of VIXY to Bull algo below"
+                                                       [(weight-equal
+                                                         [(weight-inverse-volatility
+                                                           20
+                                                           [(group
+                                                             "Just Run This - simplified 11/11/24 This is our financing for the vixy allocations"
+                                                             [(weight-equal
+                                                               [(if
+                                                                 (>
+                                                                  (current-price
+                                                                   "SPY")
+                                                                  (moving-average-price
+                                                                   "SPY"
+                                                                   {:window
+                                                                    200}))
+                                                                 [(weight-equal
+                                                                   [(group
+                                                                     "QQQ"
+                                                                     [(weight-equal
+                                                                       [(asset
+                                                                         "QLD"
+                                                                         nil)])])])]
+                                                                 [(weight-equal
+                                                                   [(group
+                                                                     "Bear"
+                                                                     [(weight-equal
+                                                                       [(if
+                                                                         (>
+                                                                          (current-price
+                                                                           "TQQQ")
+                                                                          (moving-average-price
+                                                                           "TQQQ"
+                                                                           {:window
+                                                                            20}))
+                                                                         [(weight-equal
+                                                                           [(asset
+                                                                             "QLD"
+                                                                             nil)])]
+                                                                         [(weight-equal
+                                                                           [(if
+                                                                             (<
+                                                                              (rsi
+                                                                               "QQQ"
+                                                                               {:window
+                                                                                10})
+                                                                              32.5)
+                                                                             [(asset
+                                                                               "SHV"
+                                                                               "iShares Short Treasury Bond ETF")]
+                                                                             [(weight-equal
+                                                                               [(if
+                                                                                 (>
+                                                                                  (current-price
+                                                                                   "SPY")
+                                                                                  (moving-average-price
+                                                                                   "SPY"
+                                                                                   {:window
+                                                                                    200}))
+                                                                                 [(group
+                                                                                   "50% PSQ"
+                                                                                   [(weight-equal
+                                                                                     [(asset
+                                                                                       "PSQ"
+                                                                                       "ProShares Trust - ProShares Short QQQ -1x Shares")
+                                                                                      (asset
+                                                                                       "SHV"
+                                                                                       "BlackRock Institutional Trust Company N.A. - iShares Short Treasury Bond ETF")])])]
+                                                                                 [(asset
+                                                                                   "PSQ"
+                                                                                   "ProShares Trust - ProShares Short QQQ -1x Shares")])])])])])])])])])])])
+                                                            (group
+                                                             "VIXY"
+                                                             [(weight-equal
+                                                               [(asset
+                                                                 "VIXM"
+                                                                 nil)])])])])])])])])])])])])])])])])])])])])])])])])])])])])])
+      0.34
+      (group
+       "emerging markets Algos w EDC|EDZ and dump catcher"
+       [(weight-equal
+         [(if
+           (< (cumulative-return "QQQ" {:window 5}) -5.5)
+           [(group
+             "big down move has happened"
+             [(weight-equal
+               [(asset
+                 "SHV"
+                 "BlackRock Institutional Trust Company N.A. - iShares Short Treasury Bond ETF")])])]
+           [(weight-equal
+             [(group
+               "Foreign Markets w EDZ"
+               [(weight-equal
+                 [(if
+                   (>
+                    (current-price "EEM")
+                    (moving-average-price "EEM" {:window 200}))
+                   [(group
+                     "Bull"
+                     [(weight-equal
+                       [(group
+                         "SHY/USRT - Auto"
+                         [(weight-equal
+                           [(if
+                             (>
+                              (rsi "SHY" {:window 10})
+                              (rsi "USRT" {:window 10}))
+                             [(asset "EDC" nil)]
+                             [(weight-equal
+                               [(if
+                                 (< (rsi "EEM" {:window 10}) 25)
+                                 [(asset
+                                   "SHV"
+                                   "iShares Short Treasury Bond ETF")]
+                                 [(weight-equal
+                                   [(group
+                                     "EDZ Moderated"
+                                     [(weight-equal
+                                       [(asset
+                                         "EDZ"
+                                         "Direxion Daily MSCI Emerging Markets Bear 3X Shares")])])])])])])])])
+                        (group
+                         "IEF/DIA - Auto"
+                         [(weight-equal
+                           [(if
+                             (>
+                              (rsi "IEF" {:window 10})
+                              (rsi "DIA" {:window 10}))
+                             [(asset "EDC" nil)]
+                             [(weight-equal
+                               [(if
+                                 (< (rsi "EEM" {:window 10}) 25)
+                                 [(asset
+                                   "SHV"
+                                   "iShares Short Treasury Bond ETF")]
+                                 [(weight-equal
+                                   [(group
+                                     "EDZ Moderated"
+                                     [(weight-equal
+                                       [(asset
+                                         "EDZ"
+                                         "Direxion Daily MSCI Emerging Markets Bear 3X Shares")])])])])])])])])
+                        (group
+                         "IEI/IWM - FR"
+                         [(weight-equal
+                           [(if
+                             (>
+                              (rsi "IEI" {:window 11})
+                              (rsi "IWM" {:window 16}))
+                             [(asset "EDC" nil)]
+                             [(weight-equal
+                               [(if
+                                 (< (rsi "EEM" {:window 10}) 25)
+                                 [(asset
+                                   "SHV"
+                                   "iShares Short Treasury Bond ETF")]
+                                 [(weight-equal
+                                   [(group
+                                     "EDZ Moderated"
+                                     [(weight-equal
+                                       [(asset
+                                         "EDZ"
+                                         "Direxion Daily MSCI Emerging Markets Bear 3X Shares")])])])])])])])])])])]
+                   [(group
+                     "Bear"
+                     [(weight-equal
+                       [(if
+                         (< (rsi "EEM" {:window 14}) 30)
+                         [(asset "EDC" nil)]
+                         [(weight-equal
+                           [(group
+                             "ISCB/IWM - Auto"
+                             [(weight-equal
+                               [(if
+                                 (>
+                                  (rsi "ISCB" {:window 10})
+                                  (rsi "IWM" {:window 10}))
+                                 [(asset "EDC" nil)]
+                                 [(weight-equal
+                                   [(if
+                                     (< (rsi "EEM" {:window 10}) 25)
+                                     [(asset
+                                       "SHV"
+                                       "iShares Short Treasury Bond ETF")]
+                                     [(weight-equal
+                                       [(group
+                                         "EDZ Moderated"
+                                         [(weight-equal
+                                           [(asset
+                                             "EDZ"
+                                             "Direxion Daily MSCI Emerging Markets Bear 3X Shares")])])])])])])])])
+                            (group
+                             "IGIB/DLN - Auto"
+                             [(weight-equal
+                               [(if
+                                 (>
+                                  (rsi "IGIB" {:window 10})
+                                  (rsi "DLN" {:window 10}))
+                                 [(asset "EDC" nil)]
+                                 [(weight-equal
+                                   [(if
+                                     (< (rsi "EEM" {:window 10}) 25)
+                                     [(asset
+                                       "SHV"
+                                       "iShares Short Treasury Bond ETF")]
+                                     [(weight-equal
+                                       [(group
+                                         "EDZ Moderated"
+                                         [(weight-equal
+                                           [(asset
+                                             "EDZ"
+                                             "Direxion Daily MSCI Emerging Markets Bear 3X Shares")])])])])])])])])
+                            (group
+                             "IEI/EEM - FR"
+                             [(weight-equal
+                               [(if
+                                 (>
+                                  (rsi "IEI" {:window 11})
+                                  (rsi "EEM" {:window 16}))
+                                 [(asset "EDC" nil)]
+                                 [(weight-equal
+                                   [(if
+                                     (< (rsi "EEM" {:window 10}) 25)
+                                     [(asset
+                                       "SHV"
+                                       "iShares Short Treasury Bond ETF")]
+                                     [(weight-equal
+                                       [(group
+                                         "EDZ Moderated"
+                                         [(weight-equal
+                                           [(asset
+                                             "EDZ"
+                                             "Direxion Daily MSCI Emerging Markets Bear 3X Shares")])])])])])])])])])])])])])])])
+              (group
+               "EEM Algo V1"
+               [(weight-equal
+                 [(if
+                   (>
+                    (current-price "SHV")
+                    (moving-average-price "SHV" {:window 50}))
+                   [(weight-equal
+                     [(if
+                       (>
+                        (current-price "EEM")
+                        (moving-average-price "EEM" {:window 200}))
+                       [(group
+                         "IEI vs IWM"
+                         [(weight-equal
+                           [(if
+                             (>
+                              (rsi "IEI" {:window 10})
+                              (rsi "IWM" {:window 15}))
+                             [(asset "EDC" nil)]
+                             [(weight-equal
+                               [(if
+                                 (< (rsi "EEM" {:window 10}) 25)
+                                 [(asset
+                                   "SHV"
+                                   "iShares Short Treasury Bond ETF")]
+                                 [(weight-equal
+                                   [(group
+                                     "EDZ Moderated"
+                                     [(weight-equal
+                                       [(asset
+                                         "EDZ"
+                                         "Direxion Daily MSCI Emerging Markets Bear 3X Shares")])])])])])])])])]
+                       [(group
+                         "IGIB vs EEM"
+                         [(weight-equal
+                           [(if
+                             (>
+                              (rsi "IGIB" {:window 15})
+                              (rsi "EEM" {:window 15}))
+                             [(asset "EDC" nil)]
+                             [(weight-equal
+                               [(if
+                                 (< (rsi "EEM" {:window 10}) 25)
+                                 [(asset
+                                   "SHV"
+                                   "iShares Short Treasury Bond ETF")]
+                                 [(weight-equal
+                                   [(group
+                                     "EDZ Moderated"
+                                     [(weight-equal
+                                       [(asset
+                                         "EDZ"
+                                         "Direxion Daily MSCI Emerging Markets Bear 3X Shares")])])])])])])])])
+                        (group
+                         "IGIB vs SPY"
+                         [(weight-equal
+                           [(if
+                             (>
+                              (rsi "IGIB" {:window 10})
+                              (rsi "SPY" {:window 10}))
+                             [(asset "EDC" nil)]
+                             [(weight-equal
+                               [(if
+                                 (< (rsi "EEM" {:window 10}) 25)
+                                 [(asset
+                                   "SHV"
+                                   "iShares Short Treasury Bond ETF")]
+                                 [(weight-equal
+                                   [(group
+                                     "EDZ Moderated"
+                                     [(weight-equal
+                                       [(asset
+                                         "EDZ"
+                                         "Direxion Daily MSCI Emerging Markets Bear 3X Shares")])])])])])])])])])])]
+                   [(group
+                     "IGIB vs SPY"
+                     [(weight-equal
+                       [(if
+                         (>
+                          (rsi "IGIB" {:window 10})
+                          (rsi "SPY" {:window 10}))
+                         [(asset "EDC" nil)]
+                         [(weight-equal
+                           [(if
+                             (< (rsi "EEM" {:window 10}) 25)
+                             [(asset
+                               "SHV"
+                               "iShares Short Treasury Bond ETF")]
+                             [(weight-equal
+                               [(group
+                                 "EDZ Moderated"
+                                 [(weight-equal
+                                   [(asset
+                                     "EDZ"
+                                     "Direxion Daily MSCI Emerging Markets Bear 3X Shares")])])])])])])])])])])])])])])]))])]))
